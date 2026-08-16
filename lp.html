@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナギ 企画書 — 波は、引く。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7fa; --card:#fff; --ink:#2b3a4a; --sub:#69788a;
+  --sea:#3d7ea6; --sea-deep:#2b5d7d; --sea-light:#e3eef5;
+  --sun:#f5a623; --danger:#e05c5c; --ok:#4caf7d;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:var(--bg);color:var(--ink);line-height:1.9;overflow-wrap:break-word;word-break:auto-phrase}
+.wrap{max-width:860px;margin:0 auto;padding:0 22px}
+section{padding:64px 0}
+h2{font-size:26px;font-weight:900;color:var(--sea-deep);margin-bottom:8px;letter-spacing:.03em}
+.lead{font-size:14px;color:var(--sub);margin-bottom:32px}
+.card{background:var(--card);border-radius:20px;padding:26px 28px;box-shadow:0 3px 14px rgba(43,61,77,.07);margin-bottom:18px}
+
+/* hero */
+.hero{background:linear-gradient(170deg,#1d3d52,#2b5d7d 55%,#3d7ea6);color:#fff;padding:90px 0 0;position:relative;overflow:hidden}
+.hero .badge{display:inline-block;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.35);border-radius:99px;padding:5px 16px;font-size:12px;font-weight:700;margin-bottom:22px}
+.hero h1{font-size:64px;font-weight:900;letter-spacing:.12em;line-height:1.2}
+.hero .tagline{font-size:22px;font-weight:700;margin-top:10px;letter-spacing:.06em}
+.hero .ranobe{font-size:13px;opacity:.8;margin-top:18px}
+.hero .desc{font-size:15px;margin-top:26px;max-width:560px;opacity:.95}
+.hero .waves{display:block;width:100%;margin-top:70px}
+.quote{
+  border-left:5px solid var(--sun);padding:6px 0 6px 20px;margin:22px 0;
+  font-size:17px;font-weight:700;line-height:2;
+}
+.quote .who{display:block;font-size:12px;font-weight:500;color:var(--sub);margin-top:6px}
+.hero .quote{border-color:#ffd479}
+.hero .quote .who{color:rgba(255,255,255,.7)}
+
+/* problem stats */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:26px 0}
+.stat{background:var(--card);border-radius:18px;padding:22px 16px;text-align:center;box-shadow:0 3px 14px rgba(43,61,77,.07)}
+.stat .num{font-size:34px;font-weight:900;color:var(--danger)}
+.stat .lab{font-size:12px;color:var(--sub);line-height:1.6}
+
+/* teardown table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:12px 14px;text-align:left;border-bottom:1px solid #edf1f5;vertical-align:top}
+th{background:var(--sea-light);color:var(--sea-deep);font-weight:900;white-space:nowrap}
+td b{color:var(--sea-deep)}
+.x{color:var(--danger);font-weight:900}
+.o{color:var(--ok);font-weight:900}
+.table-scroll{overflow-x:auto;background:var(--card);border-radius:20px;box-shadow:0 3px 14px rgba(43,61,77,.07);padding:6px}
+
+/* pillars */
+.pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pillar{background:var(--card);border-radius:20px;padding:26px 22px;box-shadow:0 3px 14px rgba(43,61,77,.07)}
+.pillar .icon{font-size:34px}
+.pillar h3{font-size:17px;font-weight:900;color:var(--sea-deep);margin:10px 0 8px}
+.pillar p{font-size:13px;color:var(--sub)}
+.pillar .ev{display:inline-block;margin-top:12px;font-size:10px;font-weight:700;background:var(--sea-light);color:var(--sea-deep);border-radius:6px;padding:3px 8px}
+
+/* anti list */
+.anti{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.anti .card{margin:0}
+.anti h3{font-size:15px;font-weight:900;margin-bottom:10px}
+.anti ul{list-style:none}
+.anti li{font-size:13px;padding:7px 0 7px 28px;position:relative}
+.anti .no li::before{content:'✕';position:absolute;left:0;color:var(--danger);font-weight:900}
+.anti .yes li::before{content:'○';position:absolute;left:0;color:var(--ok);font-weight:900}
+
+/* roadmap */
+.phase{display:flex;gap:18px;margin-bottom:4px}
+.phase .dot{width:34px;flex-shrink:0;display:flex;flex-direction:column;align-items:center}
+.phase .dot .c{width:34px;height:34px;border-radius:50%;background:var(--sea);color:#fff;font-weight:900;display:flex;align-items:center;justify-content:center;font-size:14px}
+.phase .dot .line{flex:1;width:3px;background:#d4e0e9;margin:4px 0}
+.phase .body{padding-bottom:26px}
+.phase h3{font-size:16px;font-weight:900;color:var(--sea-deep)}
+.phase p{font-size:13px;color:var(--sub)}
+.phase .goal{display:inline-block;margin-top:8px;font-size:11px;font-weight:700;background:#fff7e8;color:#b07708;border-radius:6px;padding:3px 10px}
+
+/* cta */
+.cta{background:linear-gradient(170deg,#2b5d7d,#1d3d52);color:#fff;text-align:center}
+.cta h2{color:#fff}
+.cta a{display:inline-block;margin-top:20px;background:#fff;color:var(--sea-deep);font-weight:900;border-radius:99px;padding:16px 46px;text-decoration:none;font-size:16px;box-shadow:0 8px 22px rgba(0,0,0,.25)}
+.cta .note{font-size:12px;opacity:.75;margin-top:16px}
+footer{padding:26px 0 40px;text-align:center;font-size:11px;color:#9aa8b5}
+@media(max-width:640px){
+  .hero h1{font-size:44px}
+  .stats,.pillars,.anti{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="badge">企画書 v1 — メンタルよわよわラジオ #8 発</span>
+    <h1>ナギ</h1>
+    <div class="tagline">波は、引く。</div>
+    <div class="ranobe">〜復職で給与は戻ったのに「消えたい」が残ってる俺が、もう一人の俺に「できてるよ」と言われ続けたら波が引いた件〜</div>
+    <div class="quote">
+      「心の中の消えたい欲求をどうコントロールするか。そんなアプリがあればいいですよね」
+      <span class="who">— ヨシ君（メンタルよわよわラジオ #8・復職から2ヶ月）</span>
+    </div>
+    <p class="desc">記録させるアプリでも、AIチャットでもない。<b>波が来た瞬間に押す、ボタン1個のアプリ。</b></p>
+  </div>
+  <svg class="waves" viewBox="0 0 1440 90" preserveAspectRatio="none"><path d="M0,45 C240,90 480,0 720,45 C960,90 1200,0 1440,45 L1440,90 L0,90 Z" fill="#f4f7fa"/></svg>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>課題 — 復職はゴールじゃなかった</h2>
+    <p class="lead">給与は戻った。評価もされている。それでも「消えたい」は残る。これは特殊な話ではなく、統計が示す構造的な問題。</p>
+    <div class="stats">
+      <div class="stat"><div class="num">47.1%</div><div class="lab">復職者が5年以内に<br>再休職する割合（厚労省研究）</div></div>
+      <div class="stat"><div class="num">約6割</div><div class="lab">うつ病の再発率<br>（2回目以降はさらに上昇）</div></div>
+      <div class="stat"><div class="num">1年+</div><div class="lab">「どうなったら正解か<br>分からなくなる」期間の実例</div></div>
+    </div>
+    <div class="card">
+      <div class="quote" style="margin:0">
+        「毎日楽しいっていう状態が、もう結構前の話になっちゃったんで。どうなったら僕は正解なんだろうか、もう分かんなくなっちゃって」
+        <span class="who">— #8 より。この「ゴール喪失」こそ、既存アプリが答えていない問い</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>Awarefy 分解 — 王者はなぜ、当事者に刺さらなかったか</h2>
+    <p class="lead">Awarefy：シリーズA累計約6.2億円調達・App Store 4.3（7,102件）の国内メンタルアプリ最大手。機能を分解し、当事者（ヨシ君＋うつ当事者レビュー）の声を突き合わせた。</p>
+    <div class="table-scroll">
+      <table>
+        <tr><th>Awarefyの構造</th><th>内容</th><th>当事者の現実</th></tr>
+        <tr><td><b>AIチャット</b></td><td>GPTベースの対話AI「ファイさん」</td><td class="x">「ChatGPTやClaudeに聞くのとそこまで変わらない」（ヨシ君）／会話を忘れる不満（レビュー）</td></tr>
+        <tr><td><b>感情記録・AI分析</b></td><td>朝晩1分のチェックイン→可視化</td><td class="x">「書いても返ってくるフィードバックが弱い」→書かなくなる（ヨシ君）／音声入力なしで入力が重い</td></tr>
+        <tr><td><b>CBT学習コース</b></td><td>認知行動療法の実践型教材</td><td class="x">「機能が多すぎてどこから始めるか分からない」「CBTの前提知識が要る」（8ヶ月使用の当事者レビュー）</td></tr>
+        <tr><td><b>瞑想音声 300本+</b></td><td>マインドフルネス・睡眠</td><td class="x">危機の瞬間に300本から選ぶ気力はない</td></tr>
+        <tr><td><b>価格</b></td><td>ベーシック年9,600円／AIパートナー年19,000円</td><td class="x">「高いなって思っちゃった」→トライアルで離脱（ヨシ君）</td></tr>
+        <tr><td><b>B2B展開</b></td><td>Awarefy for Biz・リワーク事業</td><td class="o">ここは正しい。Woebot（150万ユーザー）もB2C単体では死んだ</td></tr>
+      </table>
+    </div>
+    <div class="card" style="margin-top:18px">
+      <b style="color:var(--sea-deep)">結論：</b>Awarefyは「元気がある日に、勉強して、書ける人」のアプリ。<b>一番しんどい瞬間に、何もできない人</b>のアプリが空いている。しかもヨシ君が本当に反応したのは機能ではなく——
+      <div class="quote" style="margin:14px 0 0">
+        「聞いてくれた上で、ちゃんとできてるね、すごいねって言ってくれる。周りと比べて自分は頑張ってるのが目に見えると、達成感につながる」
+        <span class="who">— #8 より。求めているのは分析ではなく「目撃者」</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>コンセプト — 記録するな。目撃させろ。</h2>
+    <p class="lead">Awarefyの逆張り3本柱。すべて心理学的根拠のある技法を「ボタン1個」まで削ったもの。</p>
+    <div class="pillars">
+      <div class="pillar">
+        <div class="icon">🌊</div>
+        <h3>波ボタン</h3>
+        <p>「消えたい」が来たら押す。4-7-8呼吸×3周（約60秒）を自動再生。選択肢を一切出さない。終わると「この波はn秒で引いた。来た波は全部引いてきた」と生存実績が積み上がる。</p>
+        <span class="ev">根拠: アージサーフィン（DBT）— 衝動は波で、必ず頂点を過ぎる</span>
+      </div>
+      <div class="pillar">
+        <div class="icon">🪞</div>
+        <h3>できてるよミラー</h3>
+        <p>文章は書かせない。「仕事した」「ごはん食べた」をタップするだけ。AIは空虚に褒めず、本人が選んだ事実だけを根拠に返す。何も選ばなくても「1日を終えられた」が事実として残る。</p>
+        <span class="ev">根拠: 行動活性化 — できた行動の可視化が抑うつを改善</span>
+      </div>
+      <div class="pillar">
+        <div class="icon">👦</div>
+        <h3>息子モード</h3>
+        <p>返ってくる言葉はすべて「もしこれが息子の1日だったら、何て言う？」の形式。上方比較の視線を、自分に一番優しい視点にすり替える。#8でユウキが出した処方箋そのもの。</p>
+        <span class="ev">根拠: セルフディスタンシング（Kross）— 三人称視点は感情調整を改善</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>作らないもの — Awarefyの死角に立ち続けるために</h2>
+    <div class="anti">
+      <div class="card no">
+        <h3 style="color:var(--danger)">✕ 作らない</h3>
+        <ul>
+          <li>AIチャット（「ChatGPTと変わらない」への回答は、チャットを捨てること）</li>
+          <li>日記・長文入力（書かなくなるのは意志の弱さではなく症状）</li>
+          <li>学習コース・教材（勉強させない）</li>
+          <li>気分スコアのグラフ（下がるグラフを毎日見せるのは拷問）</li>
+          <li>通知・リマインド（「見なきゃ」が真面目な人を追い込む）</li>
+        </ul>
+      </div>
+      <div class="card yes">
+        <h3 style="color:var(--ok)">○ 守るもの</h3>
+        <ul>
+          <li>操作は最大3タップ。危機時は1タップ</li>
+          <li>データは端末内だけ（心の記録を外部に送らない）</li>
+          <li>空虚な励まし禁止。根拠は本人が選んだ事実のみ</li>
+          <li>相談窓口（いのちの電話等）を常設 — 医療の代替ではない線引き</li>
+          <li>「治る」をゴールにしない。「波を生き延びた実績」がゴール</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2>ロードマップ — n=1 から</h2>
+    <p class="lead">Woebotの教訓：B2C課金単体では150万ユーザーでも生き残れない。だから順番はこう。</p>
+    <div class="card">
+      <div class="phase">
+        <div class="dot"><div class="c">0</div><div class="line"></div></div>
+        <div class="body"><h3>n=1 検証（今〜2週間）</h3><p>プロトタイプをヨシ君に渡す。毎週の収録が定点観測になる（うつ当事者×毎週インタビューできる環境は、Awarefyにもない開発資産）。</p><span class="goal">ゴール: ヨシ君が7日連続で自発的に開く</span></div>
+      </div>
+      <div class="phase">
+        <div class="dot"><div class="c">1</div><div class="line"></div></div>
+        <div class="body"><h3>β公開（〜2ヶ月）</h3><p>PWA無料公開。メンタルよわよわラジオがそのまま配布チャネル＋開発ドキュメンタリーになる（番組コンテンツとしても回る）。</p><span class="goal">ゴール: リスナー外で30人が使う</span></div>
+      </div>
+      <div class="phase">
+        <div class="dot"><div class="c">2</div></div>
+        <div class="body"><h3>B2B併走（3ヶ月〜）</h3><p>リワーク施設・EAP・産業医面談の「面談と面談の間」を埋めるツールとして提供。個人は無料のまま、法人課金で支える。</p><span class="goal">ゴール: リワーク施設1社の試験導入</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="wrap">
+    <h2>プロトタイプ、もう動きます</h2>
+    <a href="app.html">🌊 ナギを触ってみる</a>
+    <div class="note">スマホ幅で最適化。データは端末内にのみ保存されます。</div>
+  </div>
+</section>
+
+<footer>ナギ 企画書 v1 — 2026-08-16 ／ メンタルよわよわラジオ #8 のトークから生成 ／ 5人×3周プロセスにて策定</footer>
+
+<!-- ===== フィードバック機能 ===== -->
+<style>
+.fb{margin-top:36px;background:#fffdf3;border:2px dashed #e6d49a;border-radius:16px;padding:16px 18px}
+.fb label{font-size:12px;font-weight:900;color:#a8770a;display:block;margin-bottom:8px}
+.fb textarea{width:100%;min-height:76px;border:1px solid #e7ddbf;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;line-height:1.8;background:#fff;resize:vertical;color:var(--ink)}
+.fb textarea:focus{outline:2px solid var(--sun)}
+#fb-submit{position:fixed;bottom:20px;right:20px;z-index:60;background:var(--sun);color:#fff;border:none;border-radius:99px;padding:15px 26px;font-family:inherit;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 8px 22px rgba(245,166,35,.45)}
+#fb-modal{display:none;position:fixed;inset:0;background:rgba(29,61,82,.55);z-index:70;align-items:center;justify-content:center;padding:20px}
+#fb-modal.on{display:flex}
+#fb-modal .box{background:#fff;border-radius:20px;max-width:640px;width:100%;max-height:86vh;display:flex;flex-direction:column;padding:24px}
+#fb-modal h3{font-size:17px;font-weight:900;color:var(--sea-deep);margin-bottom:4px}
+#fb-modal .hint{font-size:12px;color:var(--sub);margin-bottom:12px}
+#fb-name{border:1px solid #dfe6ec;border-radius:10px;padding:10px 12px;font-family:inherit;font-size:14px;margin-bottom:12px}
+#fb-out{flex:1;min-height:200px;border:1px solid #dfe6ec;border-radius:10px;padding:12px;font-family:inherit;font-size:12px;line-height:1.7;background:#f7fafc;resize:none;white-space:pre-wrap}
+#fb-modal .row{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+#fb-modal .row button{flex:1;min-width:130px;border:none;border-radius:99px;padding:13px 10px;font-family:inherit;font-size:14px;font-weight:900;cursor:pointer}
+#fb-copy{background:var(--sea);color:#fff}
+#fb-share{background:#06c755;color:#fff}
+#fb-close{background:#eef2f6;color:var(--sub)}
+</style>
+<button id="fb-submit" onclick="fbOpen()">✍️ 感想を提出</button>
+<div id="fb-modal">
+  <div class="box">
+    <h3>提出テキストができました</h3>
+    <div class="hint">これをコピーしてユウキにLINE等でそのまま送るだけでOK。ユウキ側でAIに貼って次の改善に使います。</div>
+    <input id="fb-name" placeholder="なまえ（例: ヨシ）">
+    <textarea id="fb-out" readonly></textarea>
+    <div class="row">
+      <button id="fb-copy" onclick="fbCopy(this)">📋 コピー</button>
+      <button id="fb-share" onclick="fbShare()">📤 共有（LINEなど）</button>
+      <button id="fb-close" onclick="document.getElementById('fb-modal').classList.remove('on')">閉じる</button>
+    </div>
+  </div>
+</div>
+<script>
+const FB_KEY='nagi-fb-lp';
+const fbDraft=(()=>{try{return JSON.parse(localStorage.getItem(FB_KEY))||{}}catch(e){return{}}})();
+function fbSave(){localStorage.setItem(FB_KEY,JSON.stringify(fbDraft))}
+// 各セクション末尾にコメント欄を自動挿入
+document.querySelectorAll('section:not(.cta) .wrap').forEach(w=>{
+  const h2=w.querySelector('h2'); if(!h2) return;
+  const sec=h2.textContent.split('—')[0].trim();
+  w.appendChild(fbBox(sec));
+});
+// 全体用の欄をCTA前に追加
+const lastWrap=[...document.querySelectorAll('section:not(.cta) .wrap')].pop();
+lastWrap.appendChild(fbBox('全体・その他','企画全体への「なんか違う」も、うまく言えない感覚のままでいいので'));
+function fbBox(sec,hint){
+  const d=document.createElement('div'); d.className='fb';
+  d.innerHTML=`<label>💬 「${sec}」の感想（違和感・思ったこと、原文のままでOK）</label><textarea placeholder="${hint||'例: ここは分かるけど、実際の自分は…'}"></textarea>`;
+  const ta=d.querySelector('textarea');
+  ta.value=fbDraft[sec]||'';
+  ta.addEventListener('input',()=>{fbDraft[sec]=ta.value;fbSave()});
+  if(fbDraft._name!==undefined){/* noop */}
+  return d;
+}
+function fbBuild(){
+  const name=document.getElementById('fb-name').value.trim()||'（無記名）';
+  fbDraft._name=name; fbSave();
+  const date=new Date().toLocaleDateString('ja-JP');
+  let body='';
+  document.querySelectorAll('.fb').forEach(d=>{
+    const sec=d.querySelector('label').textContent.match(/「(.+?)」/)[1];
+    const v=d.querySelector('textarea').value.trim();
+    if(v) body+=`■ ${sec}\n${v}\n\n`;
+  });
+  if(!body) body='（コメントなし）\n\n';
+  return `以下は、うつ当事者向けアプリ試作「ナギ」の企画書LPへの、当事者本人からのフィードバックです。\nコメントは原文のまま尊重して、①刺さった点 ②「違う感」の正体の仮説 ③次に直すべき最重要の1点 の順で分析し、改善版の仕様を提案してください。\n\n【ナギ フィードバック / 企画書LP】${date}\n書いた人: ${name}\n\n${body}--- 以上 ---`;
+}
+function fbOpen(){
+  const m=document.getElementById('fb-modal');
+  document.getElementById('fb-name').value=fbDraft._name||'';
+  document.getElementById('fb-out').value=fbBuild();
+  m.classList.add('on');
+}
+document.getElementById('fb-name').addEventListener('input',()=>{document.getElementById('fb-out').value=fbBuild()});
+async function fbCopy(btn){
+  const t=fbBuild();
+  try{await navigator.clipboard.writeText(t)}catch(e){
+    const ta=document.getElementById('fb-out'); ta.removeAttribute('readonly'); ta.select(); document.execCommand('copy'); ta.setAttribute('readonly','');
+  }
+  btn.textContent='✅ コピーした'; setTimeout(()=>btn.textContent='📋 コピー',1600);
+}
+async function fbShare(){
+  const t=fbBuild();
+  if(navigator.share){ try{await navigator.share({text:t})}catch(e){} }
+  else{ fbCopy(document.getElementById('fb-copy')); alert('この端末は共有メニュー非対応のため、コピーしました。LINE等に貼ってください。'); }
+}
+</script>
+</body>
+</html>

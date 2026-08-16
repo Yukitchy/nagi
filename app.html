@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>ナギ — 波は、引く。</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f4f7fa; --card:#ffffff; --ink:#2b3a4a; --sub:#7b8a99;
+  --sea:#3d7ea6; --sea-deep:#2b5d7d; --sea-light:#e3eef5;
+  --sun:#f5a623; --ok:#4caf7d; --danger:#e05c5c;
+  --radius:20px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Zen Kaku Gothic New',sans-serif; background:#dfe7ee; color:var(--ink);
+  display:flex; justify-content:center; align-items:flex-start;
+  line-height:1.7; overflow-wrap:break-word; word-break:auto-phrase;
+}
+#phone{
+  width:100%; max-width:430px; min-height:100vh; background:var(--bg);
+  display:flex; flex-direction:column; position:relative;
+  box-shadow:0 0 40px rgba(43,61,77,.15);
+}
+main{flex:1; padding:20px 18px 96px; overflow-y:auto}
+.screen{display:none}
+.screen.active{display:block; animation:fadein .25s ease}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* header */
+header{padding:18px 20px 4px; display:flex; align-items:baseline; gap:8px}
+header h1{font-size:22px; font-weight:900; letter-spacing:.06em; color:var(--sea-deep)}
+header .sub{font-size:11px; color:var(--sub); font-weight:500}
+
+/* home */
+.today-msg{
+  background:var(--card); border-radius:var(--radius); padding:18px 20px; margin-bottom:18px;
+  font-size:14px; box-shadow:0 2px 10px rgba(43,61,77,.06);
+}
+.today-msg b{color:var(--sea-deep)}
+.wave-btn{
+  width:100%; border:none; cursor:pointer; border-radius:28px;
+  background:linear-gradient(160deg,#4a90b8,#2b5d7d); color:#fff;
+  padding:38px 20px 34px; text-align:center; position:relative; overflow:hidden;
+  box-shadow:0 10px 26px rgba(43,93,125,.35); margin-bottom:18px;
+  transition:transform .12s ease;
+}
+.wave-btn:active{transform:scale(.97)}
+.wave-btn .big{font-size:26px; font-weight:900; letter-spacing:.04em; position:relative; z-index:2}
+.wave-btn .small{font-size:12px; opacity:.85; margin-top:6px; position:relative; z-index:2}
+.wave-btn svg{position:absolute; bottom:-6px; left:0; width:200%; height:60px; opacity:.35; animation:drift 7s linear infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.quickrow{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.quick{
+  background:var(--card); border:none; cursor:pointer; border-radius:var(--radius);
+  padding:18px 12px; font-family:inherit; font-size:14px; font-weight:700; color:var(--ink);
+  box-shadow:0 2px 10px rgba(43,61,77,.06);
+}
+.quick span{display:block; font-size:24px; margin-bottom:6px}
+
+/* wave flow */
+#waveflow{
+  position:fixed; inset:0; background:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);
+  color:#fff; display:none; flex-direction:column; align-items:center; justify-content:center;
+  text-align:center; padding:32px; z-index:50;
+}
+#waveflow.active{display:flex}
+#waveflow .phase-label{font-size:14px; opacity:.8; margin-bottom:14px; min-height:22px}
+#breath-circle{
+  width:180px; height:180px; border-radius:50%;
+  background:rgba(255,255,255,.12); border:2px solid rgba(255,255,255,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:30px; font-weight:900; margin-bottom:26px;
+  transition:transform 4s ease-in-out;
+}
+#breath-circle.in{transform:scale(1.35)}
+#breath-circle.hold{transform:scale(1.35)}
+#breath-circle.out{transform:scale(1.0)}
+#waveflow .copy{font-size:16px; font-weight:700; line-height:2; min-height:64px}
+#waveflow .timer{font-size:13px; opacity:.7; margin-top:10px}
+#waveflow .skip{margin-top:30px; background:none; border:1px solid rgba(255,255,255,.4); color:#fff;
+  border-radius:99px; padding:10px 26px; font-family:inherit; font-size:13px; cursor:pointer}
+#wavedone{display:none; position:fixed; inset:0; background:var(--bg); z-index:51;
+  flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:32px}
+#wavedone.active{display:flex}
+#wavedone .nagi{font-size:56px; margin-bottom:10px}
+#wavedone h2{font-size:22px; font-weight:900; color:var(--sea-deep); margin-bottom:12px}
+#wavedone p{font-size:14px; color:var(--sub); margin-bottom:26px}
+#wavedone p b{color:var(--ink)}
+.btn-primary{
+  background:var(--sea); color:#fff; border:none; border-radius:99px;
+  padding:14px 40px; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer;
+  box-shadow:0 6px 16px rgba(61,126,166,.35);
+}
+
+/* mirror */
+.section-title{font-size:16px; font-weight:900; margin:4px 0 4px; color:var(--sea-deep)}
+.section-lead{font-size:12px; color:var(--sub); margin-bottom:14px}
+.chips{display:flex; flex-wrap:wrap; gap:10px; margin-bottom:18px}
+.chip{
+  background:var(--card); border:2px solid transparent; border-radius:99px;
+  padding:10px 16px; font-family:inherit; font-size:13px; font-weight:700; color:var(--ink);
+  cursor:pointer; box-shadow:0 2px 8px rgba(43,61,77,.05); transition:all .12s;
+}
+.chip.on{border-color:var(--sea); background:var(--sea-light); color:var(--sea-deep)}
+#mirror-result{
+  display:none; background:var(--card); border-radius:var(--radius); padding:20px;
+  box-shadow:0 2px 10px rgba(43,61,77,.06); margin-top:6px;
+}
+#mirror-result.show{display:block; animation:fadein .3s ease}
+#mirror-result .who{font-size:11px; color:var(--sub); margin-bottom:8px}
+#mirror-result .msg{font-size:15px; font-weight:700; line-height:2}
+#mirror-result .msg em{font-style:normal; color:var(--sea); border-bottom:2px solid var(--sea-light)}
+
+/* facts */
+.fact{
+  background:var(--card); border-radius:var(--radius); padding:16px 18px; margin-bottom:12px;
+  display:flex; align-items:center; gap:14px; box-shadow:0 2px 10px rgba(43,61,77,.06);
+}
+.fact .icon{font-size:22px}
+.fact .t{font-size:14px; font-weight:700; flex:1}
+.fact .stamp{
+  font-size:10px; font-weight:900; color:var(--ok); border:1.5px solid var(--ok);
+  border-radius:6px; padding:2px 7px; transform:rotate(-6deg); white-space:nowrap;
+}
+
+/* log */
+#chart{background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:0 2px 10px rgba(43,61,77,.06); margin-bottom:14px}
+.stat-row{display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px}
+.stat{background:var(--card); border-radius:var(--radius); padding:16px; text-align:center; box-shadow:0 2px 10px rgba(43,61,77,.06)}
+.stat .num{font-size:28px; font-weight:900; color:var(--sea-deep)}
+.stat .lab{font-size:11px; color:var(--sub)}
+.survive{
+  background:linear-gradient(160deg,#4a90b8,#2b5d7d); color:#fff; border-radius:var(--radius);
+  padding:20px; font-size:14px; font-weight:700; line-height:2;
+}
+.survive .pct{font-size:34px; font-weight:900}
+
+/* nav */
+nav{
+  position:absolute; bottom:0; left:0; right:0; background:var(--card);
+  display:flex; border-top:1px solid #e6ecf1; padding:8px 6px calc(10px + env(safe-area-inset-bottom));
+}
+nav button{
+  flex:1; background:none; border:none; font-family:inherit; cursor:pointer;
+  font-size:10px; font-weight:700; color:var(--sub); padding:6px 0;
+}
+nav button span{display:block; font-size:20px; margin-bottom:2px; filter:grayscale(1); opacity:.55}
+nav button.on{color:var(--sea-deep)}
+nav button.on span{filter:none; opacity:1}
+
+/* help footer */
+.helpline{
+  margin-top:26px; padding:14px 16px; border-radius:14px; background:#fdf3f3;
+  font-size:11px; color:#a05252; line-height:1.9;
+}
+.helpline b{display:block; font-size:12px}
+.disclaimer{font-size:10px; color:#b3bec8; margin-top:10px; text-align:center}
+</style>
+</head>
+<body>
+<div id="phone">
+  <header><h1>ナギ</h1><span class="sub">波は、引く。</span></header>
+  <main>
+
+    <!-- HOME -->
+    <section class="screen active" id="scr-home">
+      <div class="today-msg" id="today-msg"></div>
+      <button class="wave-btn" onclick="startWave()">
+        <div class="big">🌊 いま、波が来てる</div>
+        <div class="small">押すだけ。あとは何もしなくていい</div>
+        <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C150,60 350,0 600,30 C850,60 1050,0 1200,30 L1200,60 L0,60 Z" fill="#fff"/></svg>
+      </button>
+      <div class="quickrow">
+        <button class="quick" onclick="go('mirror')"><span>🪞</span>今日のできてるよ</button>
+        <button class="quick" onclick="go('facts')"><span>📌</span>事実の鏡</button>
+      </div>
+      <div class="helpline">
+        <b>しんどさが限界のときは、人につながってください</b>
+        いのちの電話 0570-064-556 ／ よりそいホットライン 0120-279-338（24時間・無料）
+      </div>
+      <div class="disclaimer">ナギは医療機器ではありません。記録はこの端末の中だけに保存されます。</div>
+    </section>
+
+    <!-- MIRROR -->
+    <section class="screen" id="scr-mirror">
+      <div class="section-title">🪞 今日のできてるよ</div>
+      <div class="section-lead">今日「あった事実」をタップするだけ。文章は書かなくていい。</div>
+      <div class="chips" id="chips"></div>
+      <button class="btn-primary" style="width:100%" onclick="mirror()">ミラーに映す</button>
+      <div id="mirror-result">
+        <div class="who">— もしこれが、あなたの息子の1日だったら —</div>
+        <div class="msg" id="mirror-msg"></div>
+      </div>
+    </section>
+
+    <!-- FACTS -->
+    <section class="screen" id="scr-facts">
+      <div class="section-title">📌 事実の鏡</div>
+      <div class="section-lead">気分は嘘をつくけど、事実は嘘をつかない。波が来た日ほど、ここを見る。</div>
+      <div id="facts"></div>
+    </section>
+
+    <!-- LOG -->
+    <section class="screen" id="scr-log">
+      <div class="section-title">📈 波ログ</div>
+      <div class="section-lead">来た波と、引いた波の記録。</div>
+      <div class="stat-row">
+        <div class="stat"><div class="num" id="st-count">0</div><div class="lab">乗り越えた波</div></div>
+        <div class="stat"><div class="num" id="st-streak">0</div><div class="lab">連続チェックイン日数</div></div>
+      </div>
+      <div id="chart"></div>
+      <div class="survive">
+        これまでに来た波が引いた確率<br>
+        <span class="pct" id="st-pct">—</span><br>
+        <span style="font-size:12px;font-weight:500;opacity:.9">あなたは、これまでの最悪の日を全部生き延びてきた。それが記録に残っている。</span>
+      </div>
+    </section>
+
+    <!-- FEEDBACK -->
+    <section class="screen" id="scr-fb">
+      <div class="section-title">✍️ 感想（ヨシ君用）</div>
+      <div class="section-lead">使ってみて思ったことを、うまく言えない感覚のままでいいので。書けた分だけで提出OK。</div>
+      <div id="fb-list"></div>
+      <input id="fb-name" placeholder="なまえ（例: ヨシ）" style="width:100%;border:1px solid #dfe6ec;border-radius:10px;padding:12px;font-family:inherit;font-size:14px;margin:4px 0 12px">
+      <button class="btn-primary" style="width:100%" onclick="fbOpen()">感想を提出する</button>
+      <div id="fb-result" style="display:none;margin-top:14px;background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:0 2px 10px rgba(43,61,77,.06)">
+        <div style="font-size:12px;color:var(--sub);margin-bottom:8px">✅ 提出テキストができました。コピーしてユウキにLINE等で送るだけでOK。</div>
+        <textarea id="fb-out" readonly style="width:100%;min-height:170px;border:1px solid #dfe6ec;border-radius:10px;padding:10px;font-family:inherit;font-size:11px;line-height:1.7;background:#f7fafc;resize:none"></textarea>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="btn-primary" style="flex:1;padding:12px 8px;font-size:13px" id="fb-copy" onclick="fbCopy(this)">📋 コピー</button>
+          <button class="btn-primary" style="flex:1;padding:12px 8px;font-size:13px;background:#06c755;box-shadow:0 6px 16px rgba(6,199,85,.3)" onclick="fbShare()">📤 共有</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <nav>
+    <button class="on" data-s="home" onclick="go('home')"><span>🌊</span>ホーム</button>
+    <button data-s="mirror" onclick="go('mirror')"><span>🪞</span>ミラー</button>
+    <button data-s="facts" onclick="go('facts')"><span>📌</span>事実</button>
+    <button data-s="log" onclick="go('log')"><span>📈</span>波ログ</button>
+    <button data-s="fb" onclick="go('fb')"><span>✍️</span>感想</button>
+  </nav>
+</div>
+
+<!-- WAVE FLOW -->
+<div id="waveflow">
+  <div class="phase-label" id="wf-phase"></div>
+  <div id="breath-circle"><span id="wf-count"></span></div>
+  <div class="copy" id="wf-copy"></div>
+  <div class="timer" id="wf-timer"></div>
+  <button class="skip" onclick="endWave(true)">もう大丈夫</button>
+</div>
+<div id="wavedone">
+  <div class="nagi">🏖️</div>
+  <h2>凪。</h2>
+  <p id="done-msg"></p>
+  <button class="btn-primary" onclick="closeDone()">ホームへ戻る</button>
+</div>
+
+<script>
+// ---- storage ----
+const store = {
+  get k(){ return 'nagi-v1'; },
+  load(){ try{ return JSON.parse(localStorage.getItem(this.k))||{waves:[],days:{}} }catch(e){ return {waves:[],days:{}} } },
+  save(d){ localStorage.setItem(this.k, JSON.stringify(d)); }
+};
+let data = store.load();
+const todayKey = () => new Date().toISOString().slice(0,10);
+
+// ---- nav ----
+function go(s){
+  document.querySelectorAll('.screen').forEach(e=>e.classList.remove('active'));
+  document.getElementById('scr-'+s).classList.add('active');
+  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on', b.dataset.s===s));
+  if(s==='log') renderLog();
+}
+
+// ---- home message (self-distancing / no empty praise) ----
+function renderToday(){
+  const n = data.waves.length;
+  const el = document.getElementById('today-msg');
+  const streak = calcStreak();
+  if(n===0 && streak===0){
+    el.innerHTML = 'ここは、頑張る場所じゃない。<b>波が来たらボタンを押すだけ</b>の場所。それ以外の時間は、忘れていていい。';
+  } else {
+    el.innerHTML = `あなたはこれまで <b>${n}回</b> 波を乗り越えて、いまここにいる。今日は何もしなくていい。<b>それでもう充分</b>。`;
+  }
+}
+
+// ---- wave flow: 4-7-8呼吸 ×3 + urge surfing copy ----
+let wfTimer=null, wfStart=0;
+const PHASES = [
+  {label:'吸って', cls:'in',  sec:4},
+  {label:'とめて', cls:'hold',sec:7},
+  {label:'吐いて', cls:'out', sec:8},
+];
+const COPIES = [
+  '波は、感情の癖。<br>あなたの本心じゃない。',
+  '波は必ず、頂点を過ぎる。<br>いま、その途中にいる。',
+  'あと少しで引いていく。<br>何もしなくていい。ただ息だけ。',
+];
+function startWave(){
+  document.getElementById('waveflow').classList.add('active');
+  wfStart = Date.now();
+  runBreath(0,0);
+}
+function runBreath(cycle, phaseIdx){
+  if(cycle>=3){ endWave(false); return; }
+  const p = PHASES[phaseIdx];
+  const circle = document.getElementById('breath-circle');
+  circle.className = p.cls;
+  document.getElementById('wf-phase').textContent = `${cycle+1} / 3 周目`;
+  document.getElementById('wf-copy').innerHTML = COPIES[cycle];
+  let left = p.sec;
+  const count = document.getElementById('wf-count');
+  count.textContent = p.label;
+  document.getElementById('wf-timer').textContent = `${p.label} ${left}秒`;
+  wfTimer = setInterval(()=>{
+    left--;
+    document.getElementById('wf-timer').textContent = left>0 ? `${p.label} ${left}秒` : '';
+    if(left<=0){
+      clearInterval(wfTimer);
+      const nextPhase = (phaseIdx+1)%3;
+      runBreath(phaseIdx===2 ? cycle+1 : cycle, nextPhase);
+    }
+  },1000);
+}
+function endWave(skipped){
+  clearInterval(wfTimer);
+  document.getElementById('waveflow').classList.remove('active');
+  const sec = Math.round((Date.now()-wfStart)/1000);
+  data.waves.push({t:Date.now(), sec});
+  store.save(data);
+  const n = data.waves.length;
+  document.getElementById('done-msg').innerHTML =
+    `この波は <b>${sec}秒</b> で引いた。<br>これで <b>${n}回目</b>。来た波は、全部引いてきた。`;
+  document.getElementById('wavedone').classList.add('active');
+}
+function closeDone(){
+  document.getElementById('wavedone').classList.remove('active');
+  renderToday();
+}
+
+// ---- mirror: 3-tap facts -> witnessed validation ----
+const CHIP_DEFS = [
+  {id:'work',   label:'仕事をした',       fact:'復職して、今日も働いた'},
+  {id:'meet',   label:'人と話した',       fact:'誰かとちゃんと話した'},
+  {id:'eat',    label:'ごはんを食べた',   fact:'自分の体に食べさせた'},
+  {id:'out',    label:'外に出た',         fact:'外の空気を吸いに出た'},
+  {id:'family', label:'家族と過ごした',   fact:'家族との時間を作った'},
+  {id:'rest',   label:'ちゃんと休んだ',   fact:'休む勇気を出した'},
+  {id:'sleep',  label:'眠れた',           fact:'体を休ませられた'},
+  {id:'wave',   label:'波に耐えた',       fact:'消えたい波に呑まれなかった'},
+];
+function renderChips(){
+  const wrap = document.getElementById('chips');
+  wrap.innerHTML = '';
+  CHIP_DEFS.forEach(c=>{
+    const b = document.createElement('button');
+    b.className='chip'; b.textContent=c.label; b.dataset.id=c.id;
+    b.onclick=()=>b.classList.toggle('on');
+    wrap.appendChild(b);
+  });
+}
+function mirror(){
+  const on = [...document.querySelectorAll('.chip.on')].map(b=>CHIP_DEFS.find(c=>c.id===b.dataset.id));
+  const res = document.getElementById('mirror-result');
+  const msg = document.getElementById('mirror-msg');
+  if(on.length===0){
+    msg.innerHTML = '何もできなかった日でも、<em>1日を終えられた</em>。うつの中でそれをやるのは、健康な人の何倍も体力が要る。今日はそれで充分。';
+  } else {
+    const facts = on.map(c=>`<em>${c.fact}</em>`).join('。');
+    msg.innerHTML = `${facts}。<br>もし息子が同じ状態でこれをやっていたら、「無理しなくていいのに、よくやってるよ」と言うはず。<br>——同じ言葉を、自分に。`;
+  }
+  data.days[todayKey()] = on.map(c=>c.id);
+  store.save(data);
+  res.classList.add('show');
+  renderToday();
+}
+function calcStreak(){
+  let s=0; const d=new Date();
+  for(;;){
+    const k=d.toISOString().slice(0,10);
+    if(data.days[k]!==undefined){ s++; d.setDate(d.getDate()-1); } else break;
+  }
+  return s;
+}
+
+// ---- facts (editable later; seeded from ep8) ----
+const FACTS = [
+  {icon:'💼', t:'休職から復職して、仕事を続けている'},
+  {icon:'⭐', t:'会社から評価をもらっている'},
+  {icon:'🏠', t:'家族と、大きな家で暮らしている'},
+  {icon:'📊', t:'収入は同世代の平均よりずっと上にいる'},
+  {icon:'🌊', t:'これまでの最悪の日を、全部生き延びてきた'},
+];
+function renderFacts(){
+  const wrap = document.getElementById('facts');
+  wrap.innerHTML = FACTS.map(f=>
+    `<div class="fact"><div class="icon">${f.icon}</div><div class="t">${f.t}</div><div class="stamp">これは事実</div></div>`
+  ).join('');
+}
+
+// ---- log ----
+function renderLog(){
+  const n = data.waves.length;
+  document.getElementById('st-count').textContent = n;
+  document.getElementById('st-streak').textContent = calcStreak();
+  document.getElementById('st-pct').textContent = n>0 ? '100%' : '—';
+  // simple bar chart of wave durations (last 14)
+  const waves = data.waves.slice(-14);
+  const max = Math.max(60, ...waves.map(w=>w.sec));
+  const bars = waves.map(w=>{
+    const h = Math.max(8, Math.round(w.sec/max*80));
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+      <div style="width:70%;height:${h}px;background:linear-gradient(180deg,#4a90b8,#2b5d7d);border-radius:6px 6px 0 0"></div>
+      <div style="font-size:9px;color:#7b8a99">${w.sec}s</div></div>`;
+  }).join('');
+  document.getElementById('chart').innerHTML = n===0
+    ? '<div style="font-size:13px;color:#7b8a99;text-align:center;padding:20px 0">まだ波の記録はありません。<br>それは静かな日が続いているということ。</div>'
+    : `<div style="display:flex;align-items:flex-end;height:110px;gap:2px">${bars}</div>
+       <div style="font-size:11px;color:#7b8a99;text-align:center;margin-top:8px">波が引くまでの秒数（最近${waves.length}回）— 全部、引いた</div>`;
+}
+
+// ---- feedback ----
+const FB_KEY='nagi-fb-app';
+const FB_SECS=[
+  {id:'全体の第一印象', hint:'開いた瞬間どう感じたか'},
+  {id:'🌊 波ボタン', hint:'本当にしんどい瞬間に、これを押せそうか'},
+  {id:'🪞 できてるよミラー', hint:'この言われ方は響くか、白々しいか'},
+  {id:'📌 事実の鏡', hint:'事実を見せられてどう感じたか'},
+  {id:'📈 波ログ', hint:'「全部引いた」の見せ方はどうか'},
+  {id:'足りないもの・欲しいもの', hint:'「本当はこうだったら」を自由に'},
+];
+const fbDraft=(()=>{try{return JSON.parse(localStorage.getItem(FB_KEY))||{}}catch(e){return{}}})();
+function fbSave(){localStorage.setItem(FB_KEY,JSON.stringify(fbDraft))}
+function renderFb(){
+  const wrap=document.getElementById('fb-list');
+  wrap.innerHTML='';
+  FB_SECS.forEach(s=>{
+    const d=document.createElement('div');
+    d.style.cssText='background:#fffdf3;border:2px dashed #e6d49a;border-radius:16px;padding:14px 16px;margin-bottom:12px';
+    d.innerHTML=`<label style="font-size:12px;font-weight:900;color:#a8770a;display:block;margin-bottom:8px">💬 ${s.id}</label>
+      <textarea data-sec="${s.id}" placeholder="${s.hint}" style="width:100%;min-height:64px;border:1px solid #e7ddbf;border-radius:10px;padding:10px;font-family:inherit;font-size:14px;line-height:1.8;background:#fff;resize:vertical;color:var(--ink)"></textarea>`;
+    const ta=d.querySelector('textarea');
+    ta.value=fbDraft[s.id]||'';
+    ta.addEventListener('input',()=>{fbDraft[s.id]=ta.value;fbSave()});
+    wrap.appendChild(d);
+  });
+  document.getElementById('fb-name').value=fbDraft._name||'';
+  document.getElementById('fb-name').addEventListener('input',e=>{fbDraft._name=e.target.value;fbSave()});
+}
+function fbBuild(){
+  const name=(fbDraft._name||'').trim()||'（無記名）';
+  const date=new Date().toLocaleDateString('ja-JP');
+  let body='';
+  FB_SECS.forEach(s=>{ const v=(fbDraft[s.id]||'').trim(); if(v) body+=`■ ${s.id}\n${v}\n\n`; });
+  if(!body) body='（コメントなし）\n\n';
+  return `以下は、うつ当事者向けアプリ試作「ナギ」を実際に触った当事者本人からのフィードバックです。\nコメントは原文のまま尊重して、①刺さった点 ②「違う感」の正体の仮説 ③次に直すべき最重要の1点 の順で分析し、改善版の仕様を提案してください。\n\n【ナギ フィードバック / アプリ】${date}\n書いた人: ${name}\n\n${body}--- 以上 ---`;
+}
+function fbOpen(){
+  document.getElementById('fb-out').value=fbBuild();
+  document.getElementById('fb-result').style.display='block';
+}
+async function fbCopy(btn){
+  const t=fbBuild();
+  try{await navigator.clipboard.writeText(t)}catch(e){
+    const ta=document.getElementById('fb-out'); ta.removeAttribute('readonly'); ta.select(); document.execCommand('copy'); ta.setAttribute('readonly','');
+  }
+  btn.textContent='✅ コピーした'; setTimeout(()=>btn.textContent='📋 コピー',1600);
+}
+async function fbShare(){
+  const t=fbBuild();
+  if(navigator.share){ try{await navigator.share({text:t})}catch(e){} }
+  else{ fbCopy(document.getElementById('fb-copy')); alert('この端末は共有メニュー非対応のため、コピーしました。LINE等に貼ってください。'); }
+}
+
+// ---- init ----
+renderToday(); renderChips(); renderFacts(); renderFb();
+
+// ---- self-check (run ?test=1) ----
+if(location.search.includes('test=1')){
+  console.assert(typeof store.load()==='object', 'store loads');
+  data={waves:[],days:{}}; data.waves.push({t:1,sec:57});
+  console.assert(data.waves.length===1, 'wave recorded');
+  data.days[todayKey()]=['work'];
+  console.assert(calcStreak()===1, 'streak counts today');
+  console.log('nagi self-check OK');
+}
+</script>
+</body>
+</html>
