@@ -195,13 +195,19 @@ nav button.on span{filter:none; opacity:1}
         <div class="who">— もしこれが、あなたの息子の1日だったら —</div>
         <div class="msg" id="mirror-msg"></div>
       </div>
+      <div id="mirror-history"></div>
     </section>
 
     <!-- FACTS -->
     <section class="screen" id="scr-facts">
       <div class="section-title">📌 事実の鏡</div>
-      <div class="section-lead">気分は嘘をつくけど、事実は嘘をつかない。波が来た日ほど、ここを見る。</div>
+      <div class="section-lead">気分は嘘をつくけど、事実は嘘をつかない。波が来た日ほど、ここを見る。使うほど、記録から事実が増えていく。</div>
+      <div id="facts-auto"></div>
       <div id="facts"></div>
+      <div style="display:flex;gap:8px;margin-top:14px">
+        <input id="fact-in" placeholder="自分で事実を追加（例: 息子と公園に行った）" style="flex:1;border:1px solid #dfe6ec;border-radius:12px;padding:11px 12px;font-family:inherit;font-size:13px;min-width:0">
+        <button class="btn-primary" style="padding:11px 18px;font-size:13px" onclick="addFact()">追加</button>
+      </div>
     </section>
 
     <!-- LOG -->
@@ -253,7 +259,7 @@ nav button.on span{filter:none; opacity:1}
   <div id="breath-circle"><span id="wf-count"></span></div>
   <div class="copy" id="wf-copy"></div>
   <div class="timer" id="wf-timer"></div>
-  <button class="skip" onclick="endWave(true)">もう大丈夫</button>
+  <button class="skip" onclick="endWave(true)">🏖️ もう大丈夫（波が引いた）</button>
 </div>
 <div id="wavedone">
   <div class="nagi">🏖️</div>
@@ -302,20 +308,21 @@ const PHASES = [
 const COPIES = [
   '波は、感情の癖。<br>あなたの本心じゃない。',
   '波は必ず、頂点を過ぎる。<br>いま、その途中にいる。',
-  'あと少しで引いていく。<br>何もしなくていい。ただ息だけ。',
+  '何もしなくていい。<br>ただ息だけ。',
+  '何周でも付き合う。<br>急がなくていい。',
 ];
 function startWave(){
   document.getElementById('waveflow').classList.add('active');
   wfStart = Date.now();
   runBreath(0,0);
 }
+// 勝手に終わらない: 波が引くまで何周でも回る。終わらせるのは本人だけ（ヨシ君FB 2026-08-17）
 function runBreath(cycle, phaseIdx){
-  if(cycle>=3){ endWave(false); return; }
   const p = PHASES[phaseIdx];
   const circle = document.getElementById('breath-circle');
   circle.className = p.cls;
-  document.getElementById('wf-phase').textContent = `${cycle+1} / 3 周目`;
-  document.getElementById('wf-copy').innerHTML = COPIES[cycle];
+  document.getElementById('wf-phase').innerHTML = `${cycle+1} 周目 — 4-7-8呼吸<br><span style="font-size:11px;opacity:.75">鼻から4秒吸う・7秒とめる・口から8秒はく</span>`;
+  document.getElementById('wf-copy').innerHTML = COPIES[cycle % COPIES.length];
   let left = p.sec;
   const count = document.getElementById('wf-count');
   count.textContent = p.label;
@@ -336,6 +343,7 @@ function endWave(skipped){
   const sec = Math.round((Date.now()-wfStart)/1000);
   data.waves.push({t:Date.now(), sec});
   store.save(data);
+  renderAutoFacts();
   const n = data.waves.length;
   document.getElementById('done-msg').innerHTML =
     `この波は <b>${sec}秒</b> で引いた。<br>これで <b>${n}回目</b>。来た波は、全部引いてきた。`;
@@ -380,7 +388,23 @@ function mirror(){
   data.days[todayKey()] = on.map(c=>c.id);
   store.save(data);
   res.classList.add('show');
-  renderToday();
+  renderToday(); renderMirrorHistory(); renderAutoFacts();
+}
+// 「できたことを記録していきたい」→ 蓄積が見える履歴（ヨシ君FB 2026-08-17）
+function renderMirrorHistory(){
+  const wrap = document.getElementById('mirror-history');
+  const keys = Object.keys(data.days).sort().reverse().slice(0,14);
+  if(keys.length===0){ wrap.innerHTML=''; return; }
+  const rows = keys.map(k=>{
+    const labels = (data.days[k]||[]).map(id=>{const c=CHIP_DEFS.find(c=>c.id===id);return c?c.label:''}).filter(Boolean);
+    const d = new Date(k+'T00:00:00');
+    const ds = `${d.getMonth()+1}/${d.getDate()}`;
+    return `<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid #eef2f6;font-size:12px">
+      <div style="width:38px;flex-shrink:0;font-weight:900;color:var(--sea-deep)">${ds}</div>
+      <div style="color:${labels.length?'var(--ink)':'#a8b4bf'}">${labels.length?labels.join('・'):'記録した（それで充分）'}</div></div>`;
+  }).join('');
+  wrap.innerHTML = `<div style="background:var(--card);border-radius:var(--radius);padding:16px 18px;margin-top:14px;box-shadow:0 2px 10px rgba(43,61,77,.06)">
+    <div style="font-size:12px;font-weight:900;color:var(--sea-deep);margin-bottom:4px">📚 これまでのできてるよ（${Object.keys(data.days).length}日分）</div>${rows}</div>`;
 }
 function calcStreak(){
   let s=0; const d=new Date();
@@ -400,10 +424,34 @@ const FACTS = [
   {icon:'🌊', t:'これまでの最悪の日を、全部生き延びてきた'},
 ];
 function renderFacts(){
+  const custom = (data.customFacts||[]).map(t=>({icon:'✍️', t}));
   const wrap = document.getElementById('facts');
-  wrap.innerHTML = FACTS.map(f=>
+  wrap.innerHTML = FACTS.concat(custom).map(f=>
     `<div class="fact"><div class="icon">${f.icon}</div><div class="t">${f.t}</div><div class="stamp">これは事実</div></div>`
   ).join('');
+}
+// 「日々の記録から増えていくといいな」→ 記録が実績として自動で事実化（ヨシ君FB 2026-08-17）
+function renderAutoFacts(){
+  const wrap = document.getElementById('facts-auto');
+  const auto = [];
+  const n = data.waves.length;
+  const days = Object.keys(data.days).length;
+  const streak = calcStreak();
+  if(n>0) auto.push({icon:'🌊', t:`消えたい波を ${n}回 乗り越えた（全部引いた）`});
+  if(days>0) auto.push({icon:'🪞', t:`できたことを ${days}日分 記録してきた`});
+  if(streak>=3) auto.push({icon:'🔥', t:`${streak}日連続でチェックインしている`});
+  const workDays = Object.values(data.days).filter(a=>a.includes('work')).length;
+  if(workDays>=2) auto.push({icon:'💼', t:`記録の中で ${workDays}日、仕事をやりきっている`});
+  wrap.innerHTML = auto.map(f=>
+    `<div class="fact" style="background:var(--sea-light)"><div class="icon">${f.icon}</div><div class="t">${f.t}</div><div class="stamp">記録から自動で追加</div></div>`
+  ).join('');
+}
+function addFact(){
+  const inp = document.getElementById('fact-in');
+  const t = inp.value.trim(); if(!t) return;
+  data.customFacts = data.customFacts||[];
+  data.customFacts.push(t); store.save(data);
+  inp.value=''; renderFacts();
 }
 
 // ---- log ----
@@ -481,7 +529,7 @@ async function fbShare(){
 }
 
 // ---- init ----
-renderToday(); renderChips(); renderFacts(); renderFb();
+renderToday(); renderChips(); renderFacts(); renderAutoFacts(); renderMirrorHistory(); renderFb();
 
 // ---- self-check (run ?test=1) ----
 if(location.search.includes('test=1')){
