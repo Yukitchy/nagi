@@ -193,7 +193,7 @@ nav button.on span{filter:none; opacity:1}
       <div class="today-msg" id="today-msg"></div>
       <button class="wave-btn" onclick="startWave()">
         <div class="big">🌊 波が来た</div>
-        <div class="small">押すだけ</div>
+        <div class="small">深呼吸する</div>
         <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C150,60 350,0 600,30 C850,60 1050,0 1200,30 L1200,60 L0,60 Z" fill="#fff"/></svg>
       </button>
       <div class="quickrow">
@@ -358,10 +358,10 @@ function startSurf(){
       const g=ctx.createGain(); g.gain.value=depth; o.connect(g); g.connect(gain.gain); o.start(); return o; };
     mkLfo(0.07,0.09); mkLfo(0.045,0.06);
     const base=ctx.createConstantSource(); base.offset.value=0.16; base.connect(gain.gain); base.start();
-    // 急に鳴るとびびるので無音から指数カーブで12秒フェードイン（直線だと序盤から聞こえてしまう）
+    // 急に鳴るとびびるので無音から指数カーブでフェードイン（12秒は遅すぎ・6秒は直線で急すぎたの中間=指数7秒）
     const master=ctx.createGain();
-    master.gain.setValueAtTime(0.0001, ctx.currentTime);
-    master.gain.exponentialRampToValueAtTime(1, ctx.currentTime+12);
+    master.gain.setValueAtTime(0.001, ctx.currentTime);
+    master.gain.exponentialRampToValueAtTime(1, ctx.currentTime+7);
     src.connect(lp); lp.connect(gain); gain.connect(master); master.connect(ctx.destination); src.start();
     surf={ctx};
   }catch(e){ surf=null; }
