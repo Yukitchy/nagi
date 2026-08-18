@@ -102,6 +102,7 @@ header .sub{font-size:11px; color:var(--sub); font-weight:500}
   font-family:'M PLUS 1p',sans-serif; font-size:40px; font-weight:900; letter-spacing:-.02em;
   transform:scale(.5);
 }
+#breath-disc.waiting{font-size:26px; cursor:pointer}
 #waveflow .timer{font-size:14px; opacity:.75; margin-top:14px}
 #waveflow .skip{margin-top:30px; background:none; border:1px solid rgba(255,255,255,.4); color:#fff;
   border-radius:99px; padding:10px 26px; font-family:inherit; font-size:13px; cursor:pointer}
@@ -284,7 +285,7 @@ nav button.on span{filter:none; opacity:1}
     <svg class="w2" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,130 C150,80 450,170 600,130 C750,90 1050,170 1200,130 C1350,90 1650,170 1800,130 C1950,90 2250,170 2400,130 L2400,240 L0,240 Z" fill="#fff"/></svg>
     <svg class="w3" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,140 C300,100 300,180 600,140 C900,100 900,180 1200,140 C1500,100 1500,180 1800,140 C2100,100 2100,180 2400,140 L2400,240 L0,240 Z" fill="#fff"/></svg>
   </div>
-  <div id="breath-circle"><div id="breath-disc"><span id="wf-count"></span></div></div>
+  <div id="breath-circle"><div id="breath-disc" onclick="beginBreath()"><span id="wf-count"></span></div></div>
   <div class="timer" id="wf-timer"></div>
   <button class="skip" onclick="endWave(true)">🏖️ もう大丈夫</button>
 </div>
@@ -332,11 +333,25 @@ const PHASES = [
   {label:'とめて', cls:'hold',sec:7},
   {label:'吐いて', cls:'out', sec:8},
 ];
+let wfWaiting=false;
+// 開いた直後は始めない: スタート待機で自分のペースで始められる
 function startWave(){
   document.getElementById('waveflow').classList.add('active');
   wfStart = Date.now();
   renderBgmBtn();
-  if(bgmOn) startSurf();   // ボタン押下=ユーザー操作なので自動再生制限に掛からない
+  wfWaiting=true;
+  const disc=document.getElementById('breath-disc');
+  disc.classList.add('waiting');
+  disc.style.transition='transform .3s ease';
+  disc.style.transform='scale(.72)';
+  document.getElementById('wf-count').textContent='スタート';
+  document.getElementById('wf-timer').textContent='タップで開始';
+}
+function beginBreath(){
+  if(!wfWaiting) return;
+  wfWaiting=false;
+  document.getElementById('breath-disc').classList.remove('waiting');
+  if(bgmOn) startSurf();   // 波の音はスタートしてからフェードイン
   runBreath(0,0);
 }
 // ---- 波音BGM: Web Audioでその場生成（音源ファイル不要・オフラインOK）----
@@ -375,7 +390,7 @@ function renderBgmBtn(){
 function toggleBgm(){
   bgmOn=!bgmOn; localStorage.setItem('nagi-bgm', bgmOn?'on':'off');
   renderBgmBtn();
-  if(bgmOn) startSurf(); else stopSurf();
+  if(bgmOn && !wfWaiting) startSurf(); else if(!bgmOn) stopSurf();
 }
 
 // 勝手に終わらない: 波が引くまで何周でも回る。終わらせるのは本人だけ（ヨシ君FB 2026-08-17）
@@ -404,11 +419,13 @@ function runBreath(cycle, phaseIdx){
 function exitWave(){
   clearInterval(wfTimer);
   stopSurf();
+  wfWaiting=false;
   document.getElementById('waveflow').classList.remove('active');
 }
 function endWave(skipped){
   clearInterval(wfTimer);
   stopSurf();
+  wfWaiting=false;
   document.getElementById('waveflow').classList.remove('active');
   const sec = Math.round((Date.now()-wfStart)/1000);
   data.waves.push({t:Date.now(), sec});
