@@ -352,10 +352,10 @@ function startSurf(){
       const g=ctx.createGain(); g.gain.value=depth; o.connect(g); g.connect(gain.gain); o.start(); return o; };
     mkLfo(0.07,0.09); mkLfo(0.045,0.06);
     const base=ctx.createConstantSource(); base.offset.value=0.16; base.connect(gain.gain); base.start();
-    // 急に鳴るとびびるので6秒かけて無音からフェードイン
+    // 急に鳴るとびびるので無音から指数カーブで12秒フェードイン（直線だと序盤から聞こえてしまう）
     const master=ctx.createGain();
     master.gain.setValueAtTime(0.0001, ctx.currentTime);
-    master.gain.linearRampToValueAtTime(1, ctx.currentTime+6);
+    master.gain.exponentialRampToValueAtTime(1, ctx.currentTime+12);
     src.connect(lp); lp.connect(gain); gain.connect(master); master.connect(ctx.destination); src.start();
     surf={ctx};
   }catch(e){ surf=null; }
