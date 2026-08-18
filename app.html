@@ -104,6 +104,13 @@ header .sub{font-size:11px; color:var(--sub); font-weight:500}
 }
 #breath-disc.waiting{font-size:26px; cursor:pointer}
 #waveflow .timer{font-size:14px; opacity:.75; margin-top:14px}
+/* 残り秒数は背景に巨大数字で敷く（円と言葉は手前） */
+#wf-bignum{
+  position:absolute; inset:0; z-index:1; display:flex; align-items:center; justify-content:center;
+  font-family:'M PLUS 1p',sans-serif; font-weight:900; font-size:min(46vh,66vw); line-height:1;
+  letter-spacing:-.02em; opacity:.26; font-variant-numeric:tabular-nums; pointer-events:none;
+  transform:translateY(-5vh);   /* 円の中心に合わせる（下のボタンと衝突させない） */
+}
 #waveflow .skip{margin-top:30px; background:none; border:1px solid rgba(255,255,255,.4); color:#fff;
   border-radius:99px; padding:10px 26px; font-family:inherit; font-size:13px; cursor:pointer}
 #wavedone{display:none; position:fixed; inset:0; background:var(--bg); z-index:51;
@@ -285,6 +292,7 @@ nav button.on span{filter:none; opacity:1}
     <svg class="w2" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,130 C150,80 450,170 600,130 C750,90 1050,170 1200,130 C1350,90 1650,170 1800,130 C1950,90 2250,170 2400,130 L2400,240 L0,240 Z" fill="#fff"/></svg>
     <svg class="w3" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,140 C300,100 300,180 600,140 C900,100 900,180 1200,140 C1500,100 1500,180 1800,140 C2100,100 2100,180 2400,140 L2400,240 L0,240 Z" fill="#fff"/></svg>
   </div>
+  <div id="wf-bignum"></div>
   <div id="breath-circle"><div id="breath-disc" onclick="beginBreath()"><span id="wf-count"></span></div></div>
   <div class="timer" id="wf-timer"></div>
   <button class="skip" onclick="endWave(true)">🏖️ もう大丈夫</button>
@@ -345,6 +353,7 @@ function startWave(){
   disc.style.transition='transform .3s ease';
   disc.style.transform='scale(.72)';
   document.getElementById('wf-count').textContent='スタート';
+  document.getElementById('wf-bignum').textContent='';
   document.getElementById('wf-timer').textContent='タップで開始';
 }
 function beginBreath(){
@@ -404,10 +413,12 @@ function runBreath(cycle, phaseIdx){
   let left = p.sec;
   const count = document.getElementById('wf-count');
   count.textContent = p.label;
-  document.getElementById('wf-timer').textContent = `残り ${left}秒`;
+  const bignum = document.getElementById('wf-bignum');
+  document.getElementById('wf-timer').textContent = '';
+  bignum.textContent = left;
   wfTimer = setInterval(()=>{
     left--;
-    document.getElementById('wf-timer').textContent = left>0 ? `残り ${left}秒` : '';
+    bignum.textContent = left>0 ? left : '';
     if(left<=0){
       clearInterval(wfTimer);
       const nextPhase = (phaseIdx+1)%3;
