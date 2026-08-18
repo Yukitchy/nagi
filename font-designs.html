@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナギ フォント×サイズ 5案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;900&family=Noto+Sans+JP:wght@400;700&family=M+PLUS+1p:wght@500;900&family=BIZ+UDPGothic:wght@400;700&family=Klee+One:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b3a4a;--sub:#69788a;--sea:#3d7ea6;--sea-deep:#2b5d7d}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:#f4f7fa;color:var(--ink);line-height:1.8;overflow-wrap:break-word;word-break:auto-phrase}
+header{max-width:1100px;margin:0 auto;padding:40px 22px 6px}
+h1{font-size:24px;font-weight:900;color:var(--sea-deep)}
+.lead{font-size:13px;color:var(--sub);margin-top:6px}
+.grid{max-width:1100px;margin:26px auto 60px;padding:0 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:22px}
+.opt{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 4px 18px rgba(43,61,77,.08)}
+.opt .head{padding:16px 20px 12px}
+.opt .num{display:inline-block;background:var(--sea);color:#fff;font-weight:900;border-radius:8px;padding:1px 10px;font-size:14px;margin-right:8px}
+.opt .name{font-size:16px;font-weight:900}
+.opt .desc{font-size:12px;color:var(--sub);margin-top:4px}
+.demo{position:relative;height:420px;background:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);color:#fff;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:24px 16px;text-align:center}
+.demo .waves{position:absolute;left:0;bottom:0;width:200%;height:90px;opacity:.16;animation:dr 14s linear infinite;z-index:1}
+@keyframes dr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.top,.btm{position:relative;z-index:2}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.ring{border-radius:50%;border:2px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center}
+.disc{width:100%;height:100%;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;transition:transform .1s linear}
+
+/* A: 現行 Zen Kaku 900 */
+.fA{font-family:'Zen Kaku Gothic New',sans-serif}
+.fA .top{font-size:12px;opacity:.85}.fA .top b{font-size:14px;font-weight:900}
+.fA .disc{font-size:30px;font-weight:900}
+.fA .btm{font-size:13px;font-weight:700}.fA .btm .sec{font-size:10px;opacity:.7;font-weight:500}
+/* B: Noto Sans 上品ゆったり */
+.fB{font-family:'Noto Sans JP',sans-serif}
+.fB .top{font-size:11px;opacity:.85;letter-spacing:.14em}.fB .top b{font-size:13px;font-weight:700;letter-spacing:.22em}
+.fB .disc{font-size:24px;font-weight:700;letter-spacing:.3em;text-indent:.3em}
+.fB .btm{font-size:12px;font-weight:400;letter-spacing:.08em}.fB .btm .sec{font-size:10px;opacity:.7}
+/* C: M PLUS 1p 特大インパクト */
+.fC{font-family:'M PLUS 1p',sans-serif}
+.fC .top{font-size:12px;opacity:.85;font-weight:500}.fC .top b{font-size:15px;font-weight:900}
+.fC .disc{font-size:40px;font-weight:900;letter-spacing:-.02em}
+.fC .btm{font-size:14px;font-weight:900}.fC .btm .sec{font-size:10px;opacity:.7;font-weight:500}
+/* D: BIZ UD 視認性特化 */
+.fD{font-family:'BIZ UDPGothic',sans-serif}
+.fD .top{font-size:13px;opacity:.9}.fD .top b{font-size:15px;font-weight:700}
+.fD .disc{font-size:28px;font-weight:700}
+.fD .btm{font-size:14px;font-weight:700}.fD .btm .sec{font-size:11px;opacity:.75}
+/* E: Klee One 手書きのやさしさ */
+.fE{font-family:'Klee One',cursive}
+.fE .top{font-size:12px;opacity:.9}.fE .top b{font-size:15px;font-weight:600}
+.fE .disc{font-size:29px;font-weight:600}
+.fE .btm{font-size:13px;font-weight:400}.fE .btm .sec{font-size:10px;opacity:.75}
+
+.pick{max-width:1100px;margin:0 auto 70px;padding:0 22px;font-size:14px}
+.pick b{color:var(--sea-deep)}
+</style>
+</head>
+<body>
+<header>
+  <h1>🔤 フォント×サイズ 5案（デザイン①オーラリングに適用）</h1>
+  <div class="lead">全部動いています。呼吸の言葉・ガイド・下のコピーまで一式の組み合わせ。気に入ったアルファベットをユウキに伝えてください。</div>
+</header>
+<div class="grid">
+
+  <div class="opt"><div class="head"><span class="num">A</span><span class="name">Zen Kaku Gothic 900（現行）</span><div class="desc">今のフォント。骨太で迷いがない基準案</div></div>
+    <div class="demo fA"><div class="top" data-r="top"></div><div class="stage"><div class="ring" style="width:180px;height:180px"><div class="disc" data-r="disc"></div></div></div><div class="btm" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">B</span><span class="name">Noto Sans JP・字間ゆったり</span><div class="desc">細めの文字を字間広めで。スパやホテルの静けさ</div></div>
+    <div class="demo fB"><div class="top" data-r="top"></div><div class="stage"><div class="ring" style="width:180px;height:180px"><div class="disc" data-r="disc"></div></div></div><div class="btm" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">C</span><span class="name">M PLUS 1p・特大</span><div class="desc">呼吸の言葉を40pxまで拡大。しんどい時でも読み間違えない最強の視認性</div></div>
+    <div class="demo fC"><div class="top" data-r="top"></div><div class="stage"><div class="ring" style="width:190px;height:190px"><div class="disc" data-r="disc"></div></div></div><div class="btm" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">D</span><span class="name">BIZ UDPゴシック</span><div class="desc">ユニバーサルデザイン書体。全体的にやや大きめで実直・読みやすさ全振り</div></div>
+    <div class="demo fD"><div class="top" data-r="top"></div><div class="stage"><div class="ring" style="width:180px;height:180px"><div class="disc" data-r="disc"></div></div></div><div class="btm" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">E</span><span class="name">Klee One・手書き風</span><div class="desc">教科書体ベースの柔らかさ。人の手のぬくもり寄り</div></div>
+    <div class="demo fE"><div class="top" data-r="top"></div><div class="stage"><div class="ring" style="width:180px;height:180px"><div class="disc" data-r="disc"></div></div></div><div class="btm" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+</div>
+<div class="pick">選んだら: <b>「Cにして」だけでOK</b>。「Bの字間でサイズはC」みたいな組み合わせもアリです。</div>
+
+<script>
+const PH=[{n:'吸って',s:4,k:'in'},{n:'とめて',s:7,k:'hold'},{n:'吐いて',s:8,k:'out'}];
+const COPY='波は、感情の癖。あなたの本心じゃない。';
+let pi=0,t0=performance.now();
+function tick(now){
+  const p=PH[pi], el=(now-t0)/1000, f=Math.min(1,el/p.s);
+  const scale = p.k==='in'? .5+.5*f : p.k==='hold'? 1 : 1-.5*f;
+  document.querySelectorAll('[data-r="top"]').forEach(e=>e.innerHTML=`<b>${p.n}</b> — 4-7-8呼吸<br>鼻から4秒吸う・7秒とめる・口から8秒はく`);
+  document.querySelectorAll('[data-r="btm"]').forEach(e=>e.innerHTML=`${COPY}<br><span class="sec">${p.n} 残り${Math.ceil(p.s-el)}秒</span>`);
+  document.querySelectorAll('[data-r="disc"]').forEach(e=>{e.style.transform=`scale(${scale})`;e.textContent=p.n});
+  if(el>=p.s){ pi=(pi+1)%PH.length; t0=now; }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
