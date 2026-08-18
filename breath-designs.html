@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナギ 呼吸画面デザイン5案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b3a4a;--sub:#69788a;--sea:#3d7ea6;--sea-deep:#2b5d7d}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:#f4f7fa;color:var(--ink);line-height:1.8;overflow-wrap:break-word;word-break:auto-phrase}
+header{max-width:1100px;margin:0 auto;padding:40px 22px 6px}
+h1{font-size:24px;font-weight:900;color:var(--sea-deep)}
+.lead{font-size:13px;color:var(--sub);margin-top:6px}
+.grid{max-width:1100px;margin:26px auto 60px;padding:0 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:22px}
+.opt{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 4px 18px rgba(43,61,77,.08)}
+.opt .head{padding:16px 20px 12px}
+.opt .num{display:inline-block;background:var(--sea);color:#fff;font-weight:900;border-radius:8px;padding:1px 10px;font-size:14px;margin-right:8px}
+.opt .name{font-size:16px;font-weight:900}
+.opt .desc{font-size:12px;color:var(--sub);margin-top:4px}
+.demo{position:relative;height:400px;background:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);color:#fff;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:22px 16px;text-align:center}
+.ph-top{font-size:12px;opacity:.85;line-height:1.6;position:relative;z-index:3}
+.ph-top b{font-size:14px}
+.ph-bottom{font-size:12px;font-weight:700;line-height:1.9;position:relative;z-index:3}
+.ph-bottom .sec{font-size:10px;opacity:.7;font-weight:500}
+.stage{flex:1;display:flex;align-items:center;justify-content:center;position:relative;width:100%;z-index:2}
+.demo .waves{position:absolute;left:0;bottom:0;width:200%;height:90px;opacity:.16;animation:dr 14s linear infinite;z-index:1}
+@keyframes dr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ① オーラリング */
+.a-ring{width:170px;height:170px;border-radius:50%;border:2px solid rgba(255,255,255,.45);display:flex;align-items:center;justify-content:center;position:relative}
+.a-disc{width:100%;height:100%;border-radius:50%;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;transition:transform .1s linear}
+/* ② 潮位 */
+.b-tide{width:150px;height:190px;border-radius:26px;border:2px solid rgba(255,255,255,.4);position:relative;overflow:hidden}
+.b-water{position:absolute;left:0;right:0;bottom:0;background:rgba(255,255,255,.22);transition:height .1s linear}
+.b-water::before{content:'';position:absolute;top:-8px;left:-50%;width:200%;height:16px;background:radial-gradient(circle at 8px 8px, rgba(255,255,255,.35) 7px, transparent 8px);background-size:16px 16px;animation:dr 5s linear infinite}
+.b-word{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900}
+/* ③ リップル */
+.c-stage{position:relative;width:220px;height:220px;display:flex;align-items:center;justify-content:center}
+.c-core{width:92px;height:92px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;z-index:2}
+.c-rip{position:absolute;width:92px;height:92px;border-radius:50%;border:2px solid rgba(255,255,255,.55);animation:rip 4s ease-out forwards}
+@keyframes rip{from{transform:scale(1);opacity:.8}to{transform:scale(2.6);opacity:0}}
+/* ④ 月と海 */
+.d-box{position:relative;width:230px;height:210px;border-radius:22px;overflow:hidden;background:linear-gradient(180deg,#16283a,#2b5d7d 75%)}
+.d-moon{position:absolute;left:50%;margin-left:-22px;width:44px;height:44px;border-radius:50%;background:#fdf6d8;box-shadow:0 0 26px rgba(253,246,216,.8);transition:bottom .1s linear}
+.d-sea{position:absolute;left:0;right:0;bottom:0;height:56px;background:rgba(255,255,255,.14)}
+.d-sea::before{content:'';position:absolute;top:-7px;left:-50%;width:200%;height:14px;background:radial-gradient(circle at 7px 7px, rgba(255,255,255,.3) 6px, transparent 7px);background-size:14px 14px;animation:dr 6s linear infinite}
+.d-word{position:absolute;top:10px;left:0;right:0;text-align:center;font-size:17px;font-weight:900}
+/* ⑤ プログレスリング */
+.e-wrap{position:relative;width:180px;height:180px}
+.e-wrap svg{transform:rotate(-90deg)}
+.e-track{fill:none;stroke:rgba(255,255,255,.18);stroke-width:9}
+.e-bar{fill:none;stroke:#fff;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .1s linear}
+.e-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.e-center .w{font-size:23px;font-weight:900}
+.e-center .n{font-size:13px;opacity:.75}
+
+.pick{max-width:1100px;margin:0 auto 70px;padding:0 22px;font-size:14px}
+.pick b{color:var(--sea-deep)}
+@media(max-width:640px){.demo{height:360px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>🌊 呼吸画面デザイン 5案</h1>
+  <div class="lead">全部動いています。文字とアニメが絶対に重ならない構造（文字は上下の固定ゾーン・アニメは中央の枠内から出ない）。気に入った番号をユウキに伝えてください。</div>
+</header>
+<div class="grid">
+
+  <div class="opt"><div class="head"><span class="num">①</span><span class="name">オーラリング</span><div class="desc">外周リングは固定。内側の円だけが呼吸で満ち欠けする。現行に一番近い進化形</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div><div class="stage"><div class="a-ring"><div class="a-disc" id="a-disc"><span id="a-word"></span></div></div></div><div class="ph-bottom" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">②</span><span class="name">潮位タンク</span><div class="desc">吸うと水位が満ち、吐くと引く。「波は引く」のメタファーそのまま</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div><div class="stage"><div class="b-tide"><div class="b-water" id="b-water"></div><div class="b-word" id="b-word"></div></div></div><div class="ph-bottom" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">③</span><span class="name">リップル</span><div class="desc">中心は固定サイズ。呼吸の節目に波紋がふわっと広がって消える。一番静か</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div><div class="stage"><div class="c-stage" id="c-stage"><div class="c-core"><span id="c-word"></span></div></div></div><div class="ph-bottom" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">④</span><span class="name">月と海</span><div class="desc">吸うと月が昇り、吐くと海へ沈む。情景で呼吸をガイドする夜の絵</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div><div class="stage"><div class="d-box"><div class="d-word" id="d-word"></div><div class="d-moon" id="d-moon"></div><div class="d-sea"></div></div></div><div class="ph-bottom" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">⑤</span><span class="name">プログレスリング</span><div class="desc">残り時間が輪でわかる。今どこまで来たかが一目瞭然の実用派</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div><div class="stage"><div class="e-wrap"><svg width="180" height="180"><circle class="e-track" cx="90" cy="90" r="80"/><circle class="e-bar" id="e-bar" cx="90" cy="90" r="80"/></svg><div class="e-center"><div class="w" id="e-word"></div><div class="n" id="e-sec"></div></div></div></div><div class="ph-bottom" data-r="btm"></div>
+    <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+</div>
+<div class="pick">選んだら: <b>「③にして」だけでOK</b>。組み合わせ（③の波紋＋⑤の残り秒数、など）もアリです。</div>
+
+<script>
+const PH=[{n:'吸って',s:4,k:'in'},{n:'とめて',s:7,k:'hold'},{n:'吐いて',s:8,k:'out'}];
+const COPY='波は、感情の癖。あなたの本心じゃない。';
+let pi=0,t0=performance.now();
+const C=2*Math.PI*80;
+const eBar=document.getElementById('e-bar');
+eBar.style.strokeDasharray=C;
+function onPhase(){
+  // ③ 波紋を1発
+  const st=document.getElementById('c-stage');
+  const r=document.createElement('div'); r.className='c-rip';
+  st.appendChild(r); setTimeout(()=>r.remove(),4100);
+}
+function tick(now){
+  const p=PH[pi], el=(now-t0)/1000, f=Math.min(1,el/p.s);
+  // 上下の固定テキスト
+  document.querySelectorAll('[data-r="top"]').forEach(e=>e.innerHTML=`<b>${p.n}</b> — 4-7-8呼吸<br>鼻から4秒吸う・7秒とめる・口から8秒はく`);
+  document.querySelectorAll('[data-r="btm"]').forEach(e=>e.innerHTML=`${COPY}<br><span class="sec">${p.n} 残り${Math.ceil(p.s-el)}秒</span>`);
+  // ① disc
+  const scale = p.k==='in'? .5+.5*f : p.k==='hold'? 1 : 1-.5*f;
+  document.getElementById('a-disc').style.transform=`scale(${scale})`;
+  document.getElementById('a-word').textContent=p.n;
+  // ② water
+  const h = p.k==='in'? 25+60*f : p.k==='hold'? 85 : 85-60*f;
+  document.getElementById('b-water').style.height=h+'%';
+  document.getElementById('b-word').textContent=p.n;
+  // ③ word
+  document.getElementById('c-word').textContent=p.n;
+  // ④ moon
+  const mb = p.k==='in'? 40+90*f : p.k==='hold'? 130 : 130-90*f;
+  document.getElementById('d-moon').style.bottom=mb+'px';
+  document.getElementById('d-word').textContent=p.n;
+  // ⑤ ring
+  eBar.style.strokeDashoffset=C*(1-f);
+  document.getElementById('e-word').textContent=p.n;
+  document.getElementById('e-sec').textContent=`残り ${Math.ceil(p.s-el)}秒`;
+  if(el>=p.s){ pi=(pi+1)%PH.length; t0=now; onPhase(); }
+  requestAnimationFrame(tick);
+}
+onPhase(); requestAnimationFrame(tick);
+</script>
+</body>
+</html>

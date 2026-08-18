@@ -65,9 +65,24 @@ header .sub{font-size:11px; color:var(--sub); font-weight:500}
 #waveflow{
   position:fixed; inset:0; background:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);
   color:#fff; display:none; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:32px; z-index:50;
+  text-align:center; padding:32px; z-index:50; overflow:hidden;
 }
 #waveflow.active{display:flex}
+#waveflow>*{position:relative; z-index:2}
+/* 海面: 3層パララックス波 */
+#wf-waves{position:absolute; left:0; right:0; bottom:0; height:34vh; z-index:1; pointer-events:none;
+  transition:transform 4s ease-in-out}
+#wf-waves svg{position:absolute; bottom:0; left:0; width:200%; height:100%; preserveAspectRatio:none}
+#wf-waves .w1{opacity:.10; animation:wdrift 26s linear infinite}
+#wf-waves .w2{opacity:.14; animation:wdrift 17s linear infinite reverse; bottom:-4vh}
+#wf-waves .w3{opacity:.22; animation:wdrift 11s linear infinite; bottom:-9vh}
+@keyframes wdrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+#wf-bgm{
+  position:absolute; top:20px; right:18px; z-index:3;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.4); color:#fff;
+  border-radius:99px; padding:9px 16px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;
+}
+#wf-bgm.off{opacity:.55}
 #waveflow .phase-label{font-size:14px; opacity:.8; margin-bottom:14px; min-height:22px}
 #breath-circle{
   width:180px; height:180px; border-radius:50%;
@@ -76,8 +91,8 @@ header .sub{font-size:11px; color:var(--sub); font-weight:500}
   font-size:30px; font-weight:900; margin-bottom:26px;
   transition:transform 4s ease-in-out;
 }
-#breath-circle.in{transform:scale(1.35)}
-#breath-circle.hold{transform:scale(1.35)}
+#breath-circle.in{transform:scale(1.15)}
+#breath-circle.hold{transform:scale(1.15)}
 #breath-circle.out{transform:scale(1.0)}
 #waveflow .copy{font-size:16px; font-weight:700; line-height:2; min-height:64px}
 #waveflow .timer{font-size:13px; opacity:.7; margin-top:10px}
@@ -255,6 +270,12 @@ nav button.on span{filter:none; opacity:1}
 
 <!-- WAVE FLOW -->
 <div id="waveflow">
+  <button id="wf-bgm" onclick="toggleBgm()">🔊 波の音 ON</button>
+  <div id="wf-waves">
+    <svg class="w1" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,120 C200,60 400,180 600,120 C800,60 1000,180 1200,120 C1400,60 1600,180 1800,120 C2000,60 2200,180 2400,120 L2400,240 L0,240 Z" fill="#fff"/></svg>
+    <svg class="w2" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,130 C150,80 450,170 600,130 C750,90 1050,170 1200,130 C1350,90 1650,170 1800,130 C1950,90 2250,170 2400,130 L2400,240 L0,240 Z" fill="#fff"/></svg>
+    <svg class="w3" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,140 C300,100 300,180 600,140 C900,100 900,180 1200,140 C1500,100 1500,180 1800,140 C2100,100 2100,180 2400,140 L2400,240 L0,240 Z" fill="#fff"/></svg>
+  </div>
   <div class="phase-label" id="wf-phase"></div>
   <div id="breath-circle"><span id="wf-count"></span></div>
   <div class="copy" id="wf-copy"></div>
@@ -314,13 +335,52 @@ const COPIES = [
 function startWave(){
   document.getElementById('waveflow').classList.add('active');
   wfStart = Date.now();
+  renderBgmBtn();
+  if(bgmOn) startSurf();   // ボタン押下=ユーザー操作なので自動再生制限に掛からない
   runBreath(0,0);
 }
+// ---- 波音BGM: Web Audioでその場生成（音源ファイル不要・オフラインOK）----
+let surf=null;
+let bgmOn = localStorage.getItem('nagi-bgm')!=='off';
+function startSurf(){
+  if(surf) return;
+  try{
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    // ブラウンノイズ2秒ループ（波の素）
+    const len=2*ctx.sampleRate, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+    let last=0;
+    for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.5; }
+    const src=ctx.createBufferSource(); src.buffer=buf; src.loop=true;
+    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=650;
+    const gain=ctx.createGain(); gain.gain.value=0.001;
+    // うねり2本（周期違い）で「寄せて引く」を作る
+    const mkLfo=(freq,depth)=>{ const o=ctx.createOscillator(); o.frequency.value=freq;
+      const g=ctx.createGain(); g.gain.value=depth; o.connect(g); g.connect(gain.gain); o.start(); return o; };
+    mkLfo(0.07,0.09); mkLfo(0.045,0.06);
+    const base=ctx.createConstantSource(); base.offset.value=0.16; base.connect(gain.gain); base.start();
+    src.connect(lp); lp.connect(gain); gain.connect(ctx.destination); src.start();
+    surf={ctx};
+  }catch(e){ surf=null; }
+}
+function stopSurf(){ if(surf){ try{surf.ctx.close()}catch(e){} surf=null; } }
+function renderBgmBtn(){
+  const b=document.getElementById('wf-bgm');
+  b.textContent = bgmOn ? '🔊 波の音 ON' : '🔇 波の音 OFF';
+  b.classList.toggle('off', !bgmOn);
+}
+function toggleBgm(){
+  bgmOn=!bgmOn; localStorage.setItem('nagi-bgm', bgmOn?'on':'off');
+  renderBgmBtn();
+  if(bgmOn) startSurf(); else stopSurf();
+}
+
 // 勝手に終わらない: 波が引くまで何周でも回る。終わらせるのは本人だけ（ヨシ君FB 2026-08-17）
 function runBreath(cycle, phaseIdx){
   const p = PHASES[phaseIdx];
   const circle = document.getElementById('breath-circle');
   circle.className = p.cls;
+  // 呼吸に合わせて海面が満ち引きする（吸う=満ちる・吐く=引く）
+  document.getElementById('wf-waves').style.transform = (p.cls==='out') ? 'translateY(3vh)' : 'translateY(-3vh)';
   document.getElementById('wf-phase').innerHTML = `${cycle+1} 周目 — 4-7-8呼吸<br><span style="font-size:11px;opacity:.75">鼻から4秒吸う・7秒とめる・口から8秒はく</span>`;
   document.getElementById('wf-copy').innerHTML = COPIES[cycle % COPIES.length];
   let left = p.sec;
@@ -339,6 +399,7 @@ function runBreath(cycle, phaseIdx){
 }
 function endWave(skipped){
   clearInterval(wfTimer);
+  stopSurf();
   document.getElementById('waveflow').classList.remove('active');
   const sec = Math.round((Date.now()-wfStart)/1000);
   data.waves.push({t:Date.now(), sec});
