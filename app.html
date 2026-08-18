@@ -83,6 +83,11 @@ header .sub{font-size:11px; color:var(--sub); font-weight:500}
   border-radius:99px; padding:9px 16px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;
 }
 #wf-bgm.off{opacity:.55}
+#wf-back{
+  position:absolute; top:20px; left:18px; z-index:3;
+  background:none; border:none; color:rgba(255,255,255,.75);
+  font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; padding:9px 10px;
+}
 /* デザイン①オーラリング: 外周は固定・内側の円だけ満ち欠け＝文字と絶対に重ならない */
 #breath-circle{
   width:190px; height:190px; border-radius:50%;
@@ -272,6 +277,7 @@ nav button.on span{filter:none; opacity:1}
 
 <!-- WAVE FLOW -->
 <div id="waveflow">
+  <button id="wf-back" onclick="exitWave()">← 戻る</button>
   <button id="wf-bgm" onclick="toggleBgm()">🔊 波の音 ON</button>
   <div id="wf-waves">
     <svg class="w1" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,120 C200,60 400,180 600,120 C800,60 1000,180 1200,120 C1400,60 1600,180 1800,120 C2000,60 2200,180 2400,120 L2400,240 L0,240 Z" fill="#fff"/></svg>
@@ -280,7 +286,7 @@ nav button.on span{filter:none; opacity:1}
   </div>
   <div id="breath-circle"><div id="breath-disc"><span id="wf-count"></span></div></div>
   <div class="timer" id="wf-timer"></div>
-  <button class="skip" onclick="endWave(true)">🏖️ もう大丈夫（波が引いた）</button>
+  <button class="skip" onclick="endWave(true)">🏖️ もう大丈夫</button>
 </div>
 <div id="wavedone">
   <div class="nagi">🏖️</div>
@@ -393,6 +399,12 @@ function runBreath(cycle, phaseIdx){
       runBreath(phaseIdx===2 ? cycle+1 : cycle, nextPhase);
     }
   },1000);
+}
+// 「大丈夫じゃないけど閉じたい」用: 記録せず静かに閉じる（凪画面も出さない）
+function exitWave(){
+  clearInterval(wfTimer);
+  stopSurf();
+  document.getElementById('waveflow').classList.remove('active');
 }
 function endWave(skipped){
   clearInterval(wfTimer);
