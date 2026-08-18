@@ -270,7 +270,7 @@ nav button.on .li{opacity:1}
       <div class="survive">
         来た波が引いた確率<br>
         <span class="pct" id="st-pct">—</span><br>
-        <span style="font-size:12px;font-weight:500;color:var(--sub)">これまで全部引いている。</span>
+        <span id="st-note" style="font-size:12px;font-weight:500;color:var(--sub)"></span>
       </div>
     </section>
 
@@ -535,8 +535,8 @@ const FACTS = [
   {icon:'work',  t:'休職から復職して、仕事を続けている'},
   {icon:'star',  t:'会社から評価をもらっている'},
   {icon:'house', t:'家族と、大きな家で暮らしている'},
-  {icon:'money', t:'収入は同世代の平均よりずっと上にいる'},
-  {icon:'wave',  t:'これまでの最悪の日を全部生き延びてきた'},
+  {icon:'money', t:'収入は同世代の平均より上にいる'},
+  {icon:'wave',  t:'最悪の日を全部生き延びてきた'},
 ];
 function renderFacts(){
   const custom = (data.customFacts||[]).map(t=>({icon:'pen', t}));
@@ -575,6 +575,7 @@ function renderLog(){
   document.getElementById('st-count').textContent = n;
   document.getElementById('st-streak').textContent = calcStreak();
   document.getElementById('st-pct').textContent = n>0 ? '100%' : '—';
+  document.getElementById('st-note').textContent = n>0 ? 'これまで全部引いている。' : '';
   // simple bar chart of wave durations (last 14)
   const waves = data.waves.slice(-14);
   const max = Math.max(60, ...waves.map(w=>w.sec));
