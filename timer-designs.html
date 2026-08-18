@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナギ 残り秒数の配置×サイズ5案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=M+PLUS+1p:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b3a4a;--sub:#69788a;--sea:#3d7ea6;--sea-deep:#2b5d7d}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Zen Kaku Gothic New',sans-serif;background:#f4f7fa;color:var(--ink);line-height:1.8;overflow-wrap:break-word;word-break:auto-phrase}
+header{max-width:1100px;margin:0 auto;padding:40px 22px 6px}
+h1{font-size:24px;font-weight:900;color:var(--sea-deep)}
+.lead{font-size:13px;color:var(--sub);margin-top:6px}
+.grid{max-width:1100px;margin:26px auto 60px;padding:0 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:22px}
+.opt{background:#fff;border-radius:22px;overflow:hidden;box-shadow:0 4px 18px rgba(43,61,77,.08)}
+.opt .head{padding:16px 20px 12px}
+.opt .num{display:inline-block;background:var(--sea);color:#fff;font-weight:900;border-radius:8px;padding:1px 10px;font-size:14px;margin-right:8px}
+.opt .name{font-size:16px;font-weight:900}
+.opt .desc{font-size:12px;color:var(--sub);margin-top:4px}
+.demo{position:relative;height:400px;background:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);color:#fff;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 16px 24px;text-align:center}
+.ph-top{font-size:12px;opacity:.85;line-height:1.6;position:relative;z-index:3}
+.stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;position:relative;width:100%;z-index:2}
+.demo .waves{position:absolute;left:0;bottom:0;width:200%;height:90px;opacity:.16;animation:dr 14s linear infinite;z-index:1}
+@keyframes dr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* 共通: オーラリング（外周固定・内側discが満ち欠け） */
+.ring{border-radius:50%;border:2px solid rgba(255,255,255,.45);position:relative;width:170px;height:170px;flex:none}
+.disc{width:100%;height:100%;border-radius:50%;background:rgba(255,255,255,.16);transition:transform .1s linear}
+.ovl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none}
+.num-font{font-family:'M PLUS 1p',sans-serif;font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
+.unit{font-family:'M PLUS 1p',sans-serif;font-weight:700;opacity:.8}
+
+/* ① 円の中・巨大 */
+#r1{width:180px;height:180px}
+.n1{font-size:60px}
+.w1{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:24px;line-height:1.2}
+/* ② 円の中・二段 */
+#r2{width:210px;height:210px}
+.w2{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:28px;line-height:1.2;margin-bottom:8px}
+.n2{font-size:44px}
+/* ③ 円の下・特大 */
+.w3{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:26px;line-height:1.2}
+.n3{font-size:48px;opacity:1}
+/* ④ 円周リング＋中央秒数 */
+.e-wrap{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;flex:none}
+.e-wrap>svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.e-track{fill:none;stroke:rgba(255,255,255,.18);stroke-width:8}
+.e-bar{fill:none;stroke:#fff;stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .1s linear}
+#r4{width:150px;height:150px}
+.w4{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:20px;line-height:1.2;margin-bottom:6px}
+.n4{font-size:40px}
+/* ⑤ 背景の巨大数字 */
+.bg-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:170px;opacity:.26;z-index:0;letter-spacing:-.02em}
+.w5{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:26px;line-height:1.2}
+
+.pick{max-width:1100px;margin:0 auto 70px;padding:0 22px;font-size:14px}
+.pick b{color:var(--sea-deep)}
+@media(max-width:640px){.demo{height:400px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>⏱ 残り秒数の 配置×サイズ 5案</h1>
+  <div class="lead">5案とも 4-7-8呼吸（吸って4秒・とめて7秒・吐いて8秒）が実際に動きます。円の満ち欠けは全案とも同じオーラリング方式で、違うのは秒数の置き場所と大きさだけです。</div>
+</header>
+<div class="grid">
+
+  <div class="opt"><div class="head"><span class="num">①</span><span class="name">円の中・巨大</span><div class="desc">秒数を円の中に60pxで置き、呼吸の言葉を円の下に24pxで回す</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div>
+      <div class="stage">
+        <div class="ring" id="r1"><div class="disc" data-disc></div>
+          <div class="ovl"><div class="num-font n1"><span data-sec></span><span class="unit" style="font-size:20px">秒</span></div></div>
+        </div>
+        <div class="w1" data-word></div>
+      </div>
+      <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">②</span><span class="name">円の中・二段</span><div class="desc">円の中に呼吸の言葉28pxと秒数44pxを縦2段で収める。円は210pxに拡大</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div>
+      <div class="stage">
+        <div class="ring" id="r2"><div class="disc" data-disc></div>
+          <div class="ovl"><div class="w2" data-word></div><div class="num-font n2"><span data-sec></span><span class="unit" style="font-size:17px">秒</span></div></div>
+        </div>
+      </div>
+      <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">③</span><span class="name">円の下・特大</span><div class="desc">現行の配置のまま秒数を48pxへ拡大し、不透明度を1.0に上げる</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div>
+      <div class="stage">
+        <div class="ring" id="r3"><div class="disc" data-disc></div>
+          <div class="ovl"><div class="w3" data-word></div></div>
+        </div>
+        <div class="num-font n3"><span data-sec></span><span class="unit" style="font-size:18px">秒</span></div>
+      </div>
+      <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">④</span><span class="name">円周リング＋中央秒数</span><div class="desc">外周のリングが残り時間ぶん減り、円の中に言葉20pxと秒数40pxを置く</div></div>
+    <div class="demo"><div class="ph-top" data-r="top"></div>
+      <div class="stage">
+        <div class="e-wrap">
+          <svg width="210" height="210" viewBox="0 0 210 210"><circle class="e-track" cx="105" cy="105" r="101"/><circle class="e-bar" id="e-bar" cx="105" cy="105" r="101"/></svg>
+          <div class="ring" id="r4"><div class="disc" data-disc></div>
+            <div class="ovl"><div class="w4" data-word></div><div class="num-font n4"><span data-sec></span><span class="unit" style="font-size:16px">秒</span></div></div>
+          </div>
+        </div>
+      </div>
+      <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+  <div class="opt"><div class="head"><span class="num">⑤</span><span class="name">背景の巨大数字</span><div class="desc">画面の背景に170pxの数字を薄く敷き、円と言葉は現行のまま手前に置く</div></div>
+    <div class="demo"><div class="bg-num num-font" data-sec></div><div class="ph-top" data-r="top"></div>
+      <div class="stage">
+        <div class="ring" id="r5"><div class="disc" data-disc></div>
+          <div class="ovl"><div class="w5" data-word></div></div>
+        </div>
+      </div>
+      <svg class="waves" viewBox="0 0 1200 90" preserveAspectRatio="none"><path d="M0,45 C200,80 400,10 600,45 C800,80 1000,10 1200,45 L1200,90 L0,90 Z" fill="#fff"/></svg></div></div>
+
+</div>
+<div class="pick">選んだら <b>「③にして」だけでOK</b>。②の二段と④のリングのような組み合わせも指定できます。</div>
+
+<script>
+const PH=[{n:'吸って',s:4,k:'in'},{n:'とめて',s:7,k:'hold'},{n:'吐いて',s:8,k:'out'}];
+let pi=0,t0=performance.now();
+const eBar=document.getElementById('e-bar'), C=2*Math.PI*101;
+eBar.style.strokeDasharray=C;
+const secs=document.querySelectorAll('[data-sec]'), words=document.querySelectorAll('[data-word]'),
+      discs=document.querySelectorAll('[data-disc]'), tops=document.querySelectorAll('[data-r="top"]');
+function tick(now){
+  const p=PH[pi], el=(now-t0)/1000, f=Math.min(1,el/p.s), left=Math.max(1,Math.ceil(p.s-el));
+  tops.forEach(e=>e.innerHTML=`4-7-8呼吸 — 鼻から4秒吸う・7秒とめる・口から8秒はく`);
+  secs.forEach(e=>e.textContent=left);
+  words.forEach(e=>e.textContent=p.n);
+  const scale = p.k==='in'? .5+.5*f : p.k==='hold'? 1 : 1-.5*f;
+  discs.forEach(e=>e.style.transform=`scale(${scale})`);
+  eBar.style.strokeDashoffset=C*f;
+  if(el>=p.s){ pi=(pi+1)%PH.length; t0=now; }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+</script>
+</body>
+</html>
