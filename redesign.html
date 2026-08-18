@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナギ リデザイン3案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=M+PLUS+1p:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#2b3a4a;--sub:#69788a;--sea:#3d7ea6;--sea-deep:#2b5d7d;--page:#eef2f6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Zen Kaku Gothic New',sans-serif;background:var(--page);color:var(--ink);
+  line-height:1.8;word-break:auto-phrase;overflow-wrap:break-word;
+}
+header{max-width:1180px;margin:0 auto;padding:34px 20px 0}
+h1{font-size:23px;font-weight:900;color:var(--sea-deep);line-height:1.4}
+.lead{font-size:13px;color:var(--sub);margin-top:6px;max-width:760px}
+
+.plan{max-width:1180px;margin:30px auto 0;padding:0 20px}
+.plan .ttl{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.plan .no{background:var(--sea);color:#fff;font-weight:900;border-radius:7px;padding:1px 10px;font-size:14px}
+.plan .name{font-size:18px;font-weight:900;color:var(--sea-deep)}
+.plan .desc{font-size:12.5px;color:var(--sub);margin-top:5px;max-width:820px}
+
+.rail{display:flex;gap:14px;overflow-x:auto;padding:16px 20px 20px;-webkit-overflow-scrolling:touch}
+.rail::-webkit-scrollbar{height:8px}
+.rail::-webkit-scrollbar-thumb{background:#c6d2dc;border-radius:99px}
+.mock{flex:0 0 auto;width:214px}
+.mock figcaption{font-size:11px;font-weight:700;color:var(--sub);text-align:center;margin-top:7px}
+
+/* ---------- phone frame ---------- */
+.frame{
+  width:214px;height:440px;border-radius:20px;overflow:hidden;position:relative;
+  display:flex;flex-direction:column;background:var(--f-bg);color:var(--f-ink);
+  box-shadow:0 5px 18px rgba(43,61,77,.14);
+}
+.fr-head{padding:11px 12px 3px;font-size:13px;font-weight:900;color:var(--f-accd);letter-spacing:.06em}
+.fr-main{flex:1;padding:8px 11px 8px;overflow:hidden;display:flex;flex-direction:column;gap:var(--f-gap)}
+.card{background:var(--f-card);border:var(--f-border);border-radius:var(--f-radius);box-shadow:var(--f-shadow)}
+.emo{line-height:1}
+.li{display:block;flex:none;stroke:currentColor}
+
+/* home */
+.msg{padding:9px 10px;font-size:9px;line-height:1.7}
+.wavebtn{
+  position:relative;overflow:hidden;border:var(--f-btn-border);border-radius:var(--f-btn-radius);
+  background:var(--f-btn-bg);color:var(--f-btn-ink);box-shadow:var(--f-btn-shadow);
+  padding:19px 8px 17px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:3px;
+}
+.wb-big{font-size:14px;font-weight:900;display:flex;align-items:center;gap:5px;position:relative;z-index:2}
+.wb-small{font-size:8.5px;opacity:.85;position:relative;z-index:2}
+.wb-wave{position:absolute;bottom:-3px;left:0;width:200%;height:26px;opacity:.3;z-index:1;animation:drift 7s linear infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.qrow{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.q{padding:11px 6px;font-size:8.5px;font-weight:700;display:flex;flex-direction:column;align-items:center;gap:5px;text-align:center;line-height:1.4}
+.help{border-radius:var(--f-radius);background:var(--f-help-bg);border:var(--f-help-border);color:var(--f-help-ink);padding:8px 9px;font-size:7.5px;line-height:1.75}
+.help b{display:block;font-size:8px}
+.note{font-size:7px;color:var(--f-sub);text-align:center;line-height:1.6}
+.spacer{flex:1}
+
+/* nav */
+.fr-nav{display:flex;background:var(--f-nav-bg);border-top:var(--f-nav-border);padding:6px 3px 8px}
+.fr-nav div{flex:1;text-align:center;font-size:7px;font-weight:700;color:var(--f-sub);line-height:1.5}
+.fr-nav div i{display:flex;justify-content:center;font-size:13px;font-style:normal;margin-bottom:1px;opacity:.5}
+.fr-nav div.on{color:var(--f-accd)}
+.fr-nav div.on i{opacity:1}
+
+/* breath */
+.breath{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--f-breath-bg);color:var(--f-breath-ink);overflow:hidden;text-align:center}
+.bt-back{position:absolute;top:11px;left:11px;font-size:9px;font-weight:700;opacity:.75;z-index:3}
+.bt-bgm{position:absolute;top:11px;right:11px;font-size:8px;font-weight:700;z-index:3;
+  border:var(--f-bgm-border);background:var(--f-bgm-bg);border-radius:99px;padding:4px 9px;display:flex;align-items:center;gap:4px}
+.ring{width:112px;height:112px;border-radius:50%;border:1.5px solid var(--f-ring);
+  display:flex;align-items:center;justify-content:center;position:relative;z-index:2}
+.disc{width:100%;height:100%;border-radius:50%;background:var(--f-disc);transition:transform .1s linear}
+.ovl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.bnum{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:34px;line-height:1;
+  font-variant-numeric:tabular-nums;color:var(--f-breath-num)}
+.bword{font-family:'M PLUS 1p',sans-serif;font-weight:900;font-size:14px;margin-top:12px;position:relative;z-index:2}
+.bskip{margin-top:20px;border:var(--f-skip-border);background:var(--f-skip-bg);color:var(--f-skip-ink);
+  border-radius:var(--f-skip-radius);padding:6px 15px;font-size:9px;font-weight:700;
+  display:flex;align-items:center;gap:4px;position:relative;z-index:2}
+.bwaves{position:absolute;left:0;right:0;bottom:0;height:34%;z-index:1;pointer-events:none}
+.bwaves svg{position:absolute;bottom:0;left:0;width:200%;height:100%}
+.bwaves .w1{opacity:.10;animation:drift 26s linear infinite}
+.bwaves .w2{opacity:.14;bottom:-5%;animation:drift 17s linear infinite reverse}
+.bwaves .w3{opacity:.22;bottom:-10%;animation:drift 11s linear infinite}
+.bline{position:absolute;left:0;right:0;bottom:26px;height:44px;z-index:1;pointer-events:none;opacity:.85}
+.bline svg{position:absolute;bottom:0;left:0;width:200%;height:100%;animation:drift 18s linear infinite}
+
+/* mirror / facts / log 共通 */
+.s-ttl{font-size:10px;font-weight:900;color:var(--f-accd);display:flex;align-items:center;gap:4px}
+.s-lead{font-size:7.5px;color:var(--f-sub);line-height:1.6}
+.chips{display:flex;flex-wrap:wrap;gap:5px}
+.chip{background:var(--f-card);border:var(--f-chip-border);border-radius:var(--f-chip-radius);
+  padding:4px 8px;font-size:8px;font-weight:700;box-shadow:var(--f-shadow)}
+.chip.on{background:var(--f-chip-on-bg);border-color:var(--f-acc);color:var(--f-chip-on-ink)}
+.pbtn{background:var(--f-acc);color:var(--f-pbtn-ink);border-radius:var(--f-pbtn-radius);
+  text-align:center;padding:8px;font-size:9px;font-weight:700;box-shadow:var(--f-pbtn-shadow)}
+.res{padding:9px 10px}
+.res .who{font-size:7px;color:var(--f-sub);margin-bottom:4px}
+.res .m{font-size:8.5px;font-weight:700;line-height:1.9}
+.res .m em{font-style:normal;color:var(--f-acc);border-bottom:1.5px solid var(--f-acc-soft)}
+.hist{padding:9px 10px}
+.hist .h{font-size:8px;font-weight:900;color:var(--f-accd);margin-bottom:3px;display:flex;align-items:center;gap:4px}
+.hist .r{display:flex;gap:7px;padding:4px 0;border-bottom:1px solid var(--f-hair);font-size:7.5px}
+.hist .r:last-child{border-bottom:none}
+.hist .d{width:24px;flex:none;font-weight:900;color:var(--f-accd)}
+.fact{display:flex;align-items:center;gap:8px;padding:9px 10px}
+.fact .t{flex:1;font-size:8px;font-weight:700;line-height:1.5}
+.fact .stamp{font-size:6px;font-weight:900;color:var(--f-stamp);border:1px solid var(--f-stamp);
+  border-radius:3px;padding:1px 4px;white-space:nowrap;transform:var(--f-stamp-rot)}
+.fact.auto{background:var(--f-auto-bg);border-color:var(--f-auto-border)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{padding:9px 4px;text-align:center}
+.stat .n{font-family:'M PLUS 1p',sans-serif;font-size:21px;font-weight:900;color:var(--f-accd);line-height:1.2}
+.stat .l{font-size:7px;color:var(--f-sub)}
+.chart{padding:10px 9px}
+.bars{display:flex;align-items:flex-end;height:62px;gap:2px}
+.bars i{flex:1;background:var(--f-bar);border-radius:var(--f-bar-radius)}
+.chart .cap{font-size:6.5px;color:var(--f-sub);text-align:center;margin-top:5px}
+.survive{background:var(--f-survive-bg);border:var(--f-survive-border);color:var(--f-survive-ink);
+  border-radius:var(--f-radius);padding:11px;font-size:8px;font-weight:700;line-height:1.8}
+.survive .pct{font-family:'M PLUS 1p',sans-serif;font-size:24px;font-weight:900;display:block;line-height:1.3}
+.survive .sm{font-size:7.5px;font-weight:500;opacity:.9}
+
+/* ---------- 案1 ライト・ソフト ---------- */
+[data-plan="a"] .frame{
+  --f-bg:linear-gradient(180deg,#fdfaf3,#eaf1f8 62%,#e4eef6);
+  --f-card:#fff;--f-ink:#22364a;--f-sub:#7e8fa0;--f-acc:#4a90b8;--f-accd:#2b5d7d;
+  --f-acc-soft:#d6e8f3;--f-hair:#eef3f7;
+  --f-shadow:0 4px 14px rgba(90,120,150,.13);--f-border:1px solid rgba(255,255,255,.9);--f-radius:16px;--f-gap:9px;
+  --f-btn-bg:linear-gradient(160deg,#5aa0c6,#2b5d7d);--f-btn-ink:#fff;--f-btn-border:none;
+  --f-btn-radius:20px;--f-btn-shadow:0 8px 18px rgba(43,93,125,.28);
+  --f-help-bg:#fdf4f2;--f-help-border:none;--f-help-ink:#a0625c;
+  --f-nav-bg:#fff;--f-nav-border:1px solid #e7eef4;
+  --f-breath-bg:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);--f-breath-ink:#fff;--f-breath-num:#fff;
+  --f-ring:rgba(255,255,255,.5);--f-disc:rgba(255,255,255,.16);
+  --f-bgm-bg:rgba(255,255,255,.12);--f-bgm-border:1px solid rgba(255,255,255,.4);
+  --f-skip-bg:none;--f-skip-border:1px solid rgba(255,255,255,.4);--f-skip-ink:#fff;--f-skip-radius:99px;
+  --f-chip-border:1.5px solid transparent;--f-chip-radius:99px;--f-chip-on-bg:#e3eef5;--f-chip-on-ink:#2b5d7d;
+  --f-pbtn-ink:#fff;--f-pbtn-radius:99px;--f-pbtn-shadow:0 5px 13px rgba(74,144,184,.3);
+  --f-stamp:#4caf7d;--f-stamp-rot:rotate(-6deg);
+  --f-auto-bg:#e3eef5;--f-auto-border:transparent;
+  --f-bar:linear-gradient(180deg,#5aa0c6,#2b5d7d);--f-bar-radius:4px 4px 0 0;
+  --f-survive-bg:linear-gradient(160deg,#5aa0c6,#2b5d7d);--f-survive-border:none;--f-survive-ink:#fff;
+}
+
+/* ---------- 案2 夜の海・洗練 ---------- */
+[data-plan="b"] .frame{
+  --f-bg:linear-gradient(180deg,#0f2231,#16334a 55%,#1b3e56);
+  --f-card:rgba(255,255,255,.07);--f-ink:#e9f2f8;--f-sub:#93aec1;--f-acc:#5fb3d9;--f-accd:#cfe6f2;
+  --f-acc-soft:rgba(95,179,217,.45);--f-hair:rgba(255,255,255,.10);
+  --f-shadow:none;--f-border:1px solid rgba(255,255,255,.13);--f-radius:16px;--f-gap:9px;
+  --f-btn-bg:linear-gradient(160deg,rgba(95,179,217,.30),rgba(95,179,217,.08));--f-btn-ink:#eaf6fc;
+  --f-btn-border:1px solid rgba(148,208,236,.35);--f-btn-radius:18px;--f-btn-shadow:none;
+  --f-help-bg:rgba(224,124,124,.10);--f-help-border:1px solid rgba(224,124,124,.28);--f-help-ink:#e6b0ae;
+  --f-nav-bg:rgba(6,18,27,.55);--f-nav-border:1px solid rgba(255,255,255,.10);
+  --f-breath-bg:linear-gradient(180deg,#08161f,#12303f 45%,#1e4e66 78%,#2a6a89);--f-breath-ink:#eaf6fc;--f-breath-num:#fff;
+  --f-ring:rgba(178,222,244,.45);--f-disc:rgba(148,208,236,.18);
+  --f-bgm-bg:rgba(255,255,255,.08);--f-bgm-border:1px solid rgba(255,255,255,.28);
+  --f-skip-bg:rgba(255,255,255,.06);--f-skip-border:1px solid rgba(255,255,255,.32);--f-skip-ink:#eaf6fc;--f-skip-radius:99px;
+  --f-chip-border:1px solid rgba(255,255,255,.16);--f-chip-radius:99px;
+  --f-chip-on-bg:rgba(95,179,217,.22);--f-chip-on-ink:#dff0f9;
+  --f-pbtn-ink:#06202e;--f-pbtn-radius:99px;--f-pbtn-shadow:none;
+  --f-stamp:#7fd6a8;--f-stamp-rot:rotate(-6deg);
+  --f-auto-bg:rgba(95,179,217,.16);--f-auto-border:rgba(95,179,217,.34);
+  --f-bar:linear-gradient(180deg,#8fd2ee,#3d7ea6);--f-bar-radius:4px 4px 0 0;
+  --f-survive-bg:linear-gradient(160deg,rgba(95,179,217,.28),rgba(95,179,217,.06));
+  --f-survive-border:1px solid rgba(148,208,236,.3);--f-survive-ink:#eaf6fc;
+}
+
+/* ---------- 案3 道具ミニマル ---------- */
+[data-plan="c"] .frame{
+  --f-bg:#fff;
+  --f-card:#fff;--f-ink:#15181b;--f-sub:#6d757c;--f-acc:#0b62d6;--f-accd:#0b62d6;
+  --f-acc-soft:#b9d3f5;--f-hair:#eceff2;
+  --f-shadow:none;--f-border:1px solid #e3e6e9;--f-radius:4px;--f-gap:10px;
+  --f-btn-bg:#0b62d6;--f-btn-ink:#fff;--f-btn-border:none;--f-btn-radius:4px;--f-btn-shadow:none;
+  --f-help-bg:#fff;--f-help-border:1px solid #e3e6e9;--f-help-ink:#6d757c;
+  --f-nav-bg:#fff;--f-nav-border:1px solid #e3e6e9;
+  --f-breath-bg:#fff;--f-breath-ink:#15181b;--f-breath-num:#0b62d6;
+  --f-ring:#d7dce1;--f-disc:#eaf1fb;
+  --f-bgm-bg:#fff;--f-bgm-border:1px solid #d7dce1;
+  --f-skip-bg:#fff;--f-skip-border:1px solid #0b62d6;--f-skip-ink:#0b62d6;--f-skip-radius:4px;
+  --f-chip-border:1px solid #d7dce1;--f-chip-radius:4px;--f-chip-on-bg:#eaf1fb;--f-chip-on-ink:#0b62d6;
+  --f-pbtn-ink:#fff;--f-pbtn-radius:4px;--f-pbtn-shadow:none;
+  --f-stamp:#0b62d6;--f-stamp-rot:none;
+  --f-auto-bg:#f5f8fd;--f-auto-border:#c8d9f2;
+  --f-bar:#0b62d6;--f-bar-radius:0;
+  --f-survive-bg:#fff;--f-survive-border:1px solid #0b62d6;--f-survive-ink:#15181b;
+}
+[data-plan="c"] .frame{border:1px solid #dfe3e7;border-radius:6px;box-shadow:none}
+[data-plan="c"] .fr-nav div i{opacity:.45}
+[data-plan="c"] .fr-nav div.on i{opacity:1}
+
+.foot{max-width:1180px;margin:24px auto 60px;padding:0 20px;font-size:14px}
+.foot b{color:var(--sea-deep)}
+</style>
+</head>
+<body>
+<header>
+  <h1>ナギ リデザイン3案</h1>
+  <div class="lead">うつ当事者向けアプリ「ナギ」の5画面（ホーム・呼吸・ミラー・事実・波ログ）を、3通りの配色とパーツ設計で組み直した比較ページです。画面のモックは実物と同じHTMLで作ってあり、各案の呼吸画面は4-7-8のカウントダウンが実際に動きます。</div>
+</header>
+
+<div id="plans"></div>
+
+<div class="foot">選んだら <b>「案2にして」だけでOK</b>。「案1のカードで案3のアイコン」のような組み合わせ指定もできます。</div>
+
+<script>
+/* ---------- アイコン: 案1・案2は絵文字、案3はインラインSVGの線画 ---------- */
+const EMO={wave:'🌊',mirror:'🪞',pin:'📌',chart:'📈',pen:'✍️',beach:'🏖️',sound:'🔊',book:'📚',
+  work:'💼',star:'⭐',house:'🏠',money:'📊',fire:'🔥'};
+const PATH={
+  wave:'<path d="M2 13c2.7-4 5.3 4 8 0s5.3 4 8 0"/><path d="M2 8c2.7-4 5.3 4 8 0s5.3 4 8 0"/>',
+  mirror:'<ellipse cx="10" cy="8" rx="5.5" ry="6.5"/><path d="M10 14.5V18"/><path d="M7.5 18h5"/>',
+  pin:'<circle cx="10" cy="6.5" r="3"/><path d="M10 9.5V17"/>',
+  chart:'<path d="M3 17V10"/><path d="M9 17V4"/><path d="M15 17v-5"/>',
+  pen:'<path d="M3.5 16.5l3.2-.8 9-9-2.4-2.4-9 9z"/><path d="M13 5.5l2.4 2.4"/>',
+  beach:'<circle cx="10" cy="7" r="3"/><path d="M3 14.5c2.3-2.5 4.7 2.5 7 0s4.7 2.5 7 0"/>',
+  sound:'<path d="M4 8h3l4-3v10l-4-3H4z"/><path d="M14 7.2c1.4 1.6 1.4 4 0 5.6"/>',
+  book:'<rect x="4" y="3.5" width="12" height="13" rx="1.2"/><path d="M8 3.5v13"/>',
+  work:'<rect x="3" y="7" width="14" height="9" rx="1.2"/><path d="M7.5 7V5h5v2"/>',
+  star:'<path d="M10 3.2l2.1 4.5 4.7.5-3.5 3.2 1 4.6L10 13.7l-4.3 2.3 1-4.6L3.2 8.2l4.7-.5z"/>',
+  house:'<path d="M3 9l7-5.5L17 9v8H3z"/><path d="M8 17v-4.5h4V17"/>',
+  money:'<path d="M3 16.5h14"/><rect x="4" y="9" width="3" height="6"/><rect x="9" y="5" width="3" height="10"/><rect x="14" y="11" width="3" height="4"/>',
+  fire:'<path d="M10 3c2.8 3.6 4.6 5 4.6 8a4.6 4.6 0 01-9.2 0c0-2 1.7-3 2.7-4.7.5 1 1 1.5 1.9 2 .4-2 0-3.6 0-5.3z"/>'
+};
+function ic(n,p,sz){
+  if(p!=='c') return `<span class="emo" style="font-size:${sz}px">${EMO[n]}</span>`;
+  return `<svg class="li" width="${sz}" height="${sz}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">${PATH[n]}</svg>`;
+}
+const WAVE_PATHS=[
+ 'M0,120 C200,60 400,180 600,120 C800,60 1000,180 1200,120 C1400,60 1600,180 1800,120 C2000,60 2200,180 2400,120 L2400,240 L0,240 Z',
+ 'M0,130 C150,80 450,170 600,130 C750,90 1050,170 1200,130 C1350,90 1650,170 1800,130 C1950,90 2250,170 2400,130 L2400,240 L0,240 Z',
+ 'M0,140 C300,100 300,180 600,140 C900,100 900,180 1200,140 C1500,100 1500,180 1800,140 C2100,100 2100,180 2400,140 L2400,240 L0,240 Z'
+];
+
+/* ---------- 画面 ---------- */
+const NAV=[['wave','ホーム'],['mirror','ミラー'],['pin','事実'],['chart','波ログ'],['pen','感想']];
+function nav(p,idx){
+  return `<div class="fr-nav">`+NAV.map((n,i)=>
+    `<div class="${i===idx?'on':''}"><i>${ic(n[0],p,13)}</i>${n[1]}</div>`).join('')+`</div>`;
+}
+function scrHome(p){return `
+  <div class="fr-head">ナギ</div>
+  <div class="fr-main">
+    <div class="card msg">波が来たら下のボタンを押すだけ。それ以外の時間は忘れていてOK。</div>
+    <div class="wavebtn">
+      ${p==='c'?'':`<svg class="wb-wave" viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C150,60 350,0 600,30 C850,60 1050,0 1200,30 L1200,60 L0,60 Z" fill="#fff"/></svg>`}
+      <span class="wb-big">${ic('wave',p,15)} 波が来た</span>
+      <span class="wb-small">深呼吸する</span>
+    </div>
+    <div class="qrow">
+      <div class="card q">${ic('mirror',p,16)}<span>今日のできてるよ</span></div>
+      <div class="card q">${ic('pin',p,16)}<span>事実の鏡</span></div>
+    </div>
+    <div class="help"><b>しんどさが限界のときは、人につながってください</b>いのちの電話 0570-064-556 ／ よりそいホットライン 0120-279-338（24時間・無料）</div>
+    <div class="note">ナギは医療機器ではありません。記録はこの端末の中だけに保存されます。</div>
+    <div class="spacer"></div>
+  </div>
+  ${nav(p,0)}`;
+}
+function scrBreath(p){
+  const deco = p==='c'
+    ? `<div class="bline"><svg viewBox="0 0 2400 120" preserveAspectRatio="none" fill="none" stroke="#0b62d6" stroke-width="7"><path d="M0,60 C300,10 300,110 600,60 C900,10 900,110 1200,60 C1500,10 1500,110 1800,60 C2100,10 2100,110 2400,60"/></svg></div>`
+    : `<div class="bwaves">`+WAVE_PATHS.map((d,i)=>
+        `<svg class="w${i+1}" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="${d}" fill="#fff"/></svg>`).join('')+`</div>`;
+  return `
+  <div class="breath">
+    ${deco}
+    <div class="bt-back">← 戻る</div>
+    <div class="bt-bgm">${ic('sound',p,10)} 波の音 ON</div>
+    <div class="ring"><div class="disc" data-disc></div><div class="ovl"><span class="bnum" data-sec></span></div></div>
+    <div class="bword" data-word></div>
+    <div class="bskip">${ic('beach',p,11)} もう大丈夫</div>
+  </div>`;
+}
+const CHIPS=['仕事をした','人と話した','ごはんを食べた','外に出た','家族と過ごした','ちゃんと休んだ','眠れた','波に耐えた'];
+const HIST=[['8/18','仕事をした・人と話した'],['8/17','ちゃんと休んだ・眠れた'],['8/16','記録した（それで充分）']];
+function scrMirror(p){return `
+  <div class="fr-head">ナギ</div>
+  <div class="fr-main">
+    <div class="s-ttl">${ic('mirror',p,12)} 今日のできてるよ</div>
+    <div class="s-lead">今日「あった事実」をタップするだけ。文章は書かなくていい。</div>
+    <div class="chips">${CHIPS.map((c,i)=>`<span class="chip${i<2?' on':''}">${c}</span>`).join('')}</div>
+    <div class="pbtn">ミラーに映す</div>
+    <div class="card res">
+      <div class="who">— もしこれが、あなたの息子の1日だったら —</div>
+      <div class="m"><em>復職して、今日も働いた</em>。<em>誰かとちゃんと話した</em>。</div>
+    </div>
+    <div class="card hist">
+      <div class="h">${ic('book',p,11)} これまでのできてるよ（7日分）</div>
+      ${HIST.map(r=>`<div class="r"><span class="d">${r[0]}</span><span>${r[1]}</span></div>`).join('')}
+    </div>
+    <div class="spacer"></div>
+  </div>
+  ${nav(p,1)}`;
+}
+const FACTS_AUTO=[['wave','消えたい波を 12回 乗り越えた（全部引いた）'],['mirror','できたことを 7日分 記録してきた'],['fire','7日連続でチェックインしている']];
+const FACTS=[['work','休職から復職して、仕事を続けている'],['star','会社から評価をもらっている'],['house','家族と、大きな家で暮らしている'],['money','収入は同世代の平均よりずっと上にいる']];
+function scrFacts(p){return `
+  <div class="fr-head">ナギ</div>
+  <div class="fr-main">
+    <div class="s-ttl">${ic('pin',p,12)} 事実の鏡</div>
+    <div class="s-lead">客観的な事実だけを置く場所。使うほど記録から増えていく。</div>
+    ${FACTS_AUTO.map(f=>`<div class="card fact auto">${ic(f[0],p,15)}<div class="t">${f[1]}</div><div class="stamp">記録から自動</div></div>`).join('')}
+    ${FACTS.map(f=>`<div class="card fact">${ic(f[0],p,15)}<div class="t">${f[1]}</div><div class="stamp">これは事実</div></div>`).join('')}
+    <div class="spacer"></div>
+  </div>
+  ${nav(p,2)}`;
+}
+const BARS=[38,55,22,70,44,31,62,48,26,58];
+function scrLog(p){return `
+  <div class="fr-head">ナギ</div>
+  <div class="fr-main">
+    <div class="s-ttl">${ic('chart',p,12)} 波ログ</div>
+    <div class="s-lead">来た波と、引いた波の記録。</div>
+    <div class="stats">
+      <div class="card stat"><div class="n">12</div><div class="l">乗り越えた波</div></div>
+      <div class="card stat"><div class="n">7</div><div class="l">連続チェックイン日数</div></div>
+    </div>
+    <div class="card chart">
+      <div class="bars">${BARS.map(h=>`<i style="height:${h}%"></i>`).join('')}</div>
+      <div class="cap">波が引くまでの秒数（最近10回）</div>
+    </div>
+    <div class="survive">これまでに来た波が引いた確率<span class="pct">100%</span><span class="sm">来た波はこれまで全部引いている。</span></div>
+    <div class="spacer"></div>
+  </div>
+  ${nav(p,3)}`;
+}
+const SCREENS=[['ホーム',scrHome],['呼吸',scrBreath],['ミラー',scrMirror],['事実',scrFacts],['波ログ',scrLog]];
+
+/* ---------- 3案 ---------- */
+const PLANS=[
+ {id:'a',no:'①',name:'ライト・ソフト',
+  fn:'いま出ている画面の構成はそのままに、明るさだけ上げた案。',
+  desc:'背景をクリーム#fdfaf3から淡青#e4eef6への縦グラデーションに変更。カードは白のまま、影を現行の 0 2px 10px から 0 4px 14px rgba(90,120,150,.13) に広げてにじませ、角丸を16pxに統一。文字色は濃紺#22364aに揃えて、カード間の余白を9pxに詰めています。アイコンは現行の絵文字のまま。呼吸画面だけは現行の夜の海（#1d3d52→#3d7ea6）を残し、呼吸中だけ暗くなる作りにしています。'},
+ {id:'b',no:'②',name:'夜の海・洗練',
+  fn:'呼吸画面の暗さを全画面に広げ、画面の切り替わりで明るさが跳ねない案。',
+  desc:'全画面を#0f2231→#1b3e56のダークブルーで統一。カードは白の不透明度7%＋1pxの枠線 rgba(255,255,255,.13) に置き換え、影は全廃（暗い背景では影が効かないため境界を線で出す）。文字は#e9f2f8、アクセントは#5fb3d9。呼吸画面の背景は4段階（#08161f→#12303f→#1e4e66→#2a6a89）に増やし、波は3層を不透明度10/14/22%に振り分けています。アイコンは絵文字のまま。'},
+ {id:'c',no:'③',name:'道具ミニマル',
+  fn:'装飾を全部落として、体温計や血圧計のように数字と操作だけを残した案。',
+  desc:'背景は白1色、アクセントは#0b62d6の1色だけ。影とグラデーションを全廃し、境界は1pxの線#e3e6e9だけで表現。角丸は4pxまで落として余白を10pxに広げ、線の少なさを余白で補っています。絵文字は全てインラインSVGの線画アイコン（線幅1.4・塗りなし）に差し替え。「これは事実」スタンプの傾きも外して水平にしています。呼吸画面も白基調で、波は塗りではなく1本の線です。'}
+];
+document.getElementById('plans').innerHTML = PLANS.map(pl=>`
+  <section class="plan">
+    <div class="ttl"><span class="no">${pl.no}</span><span class="name">${pl.name}</span></div>
+    <div class="desc">${pl.fn}<br>${pl.desc}</div>
+  </section>
+  <div class="rail">
+    ${SCREENS.map(s=>`<figure class="mock" data-plan="${pl.id}">
+       <div class="frame">${s[1](pl.id)}</div>
+       <figcaption>${s[0]}</figcaption></figure>`).join('')}
+  </div>`).join('');
+
+/* ---------- 4-7-8呼吸: 3案の呼吸モックを1本のループで動かす ---------- */
+const PH=[{n:'吸って',s:4,k:'in'},{n:'とめて',s:7,k:'hold'},{n:'吐いて',s:8,k:'out'}];
+let pi=0,t0=performance.now();
+const secs=document.querySelectorAll('[data-sec]'),
+      words=document.querySelectorAll('[data-word]'),
+      discs=document.querySelectorAll('[data-disc]');
+function tick(now){
+  const p=PH[pi], el=(now-t0)/1000, f=Math.min(1,el/p.s), left=Math.max(1,Math.ceil(p.s-el));
+  secs.forEach(e=>e.textContent=left);
+  words.forEach(e=>e.textContent=p.n);
+  const sc = p.k==='in' ? .5+.5*f : p.k==='hold' ? 1 : 1-.5*f;
+  discs.forEach(e=>e.style.transform=`scale(${sc})`);
+  if(el>=p.s){ pi=(pi+1)%PH.length; t0=now; }
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+/* ---------- self-check (?test=1) ---------- */
+if(location.search.includes('test=1')){
+  console.assert(document.querySelectorAll('.mock').length===15,'15 mocks');
+  console.assert(secs.length===3 && discs.length===3,'3 breath mocks animated');
+  console.assert(document.documentElement.scrollWidth<=window.innerWidth,'no page h-scroll');
+  console.log('redesign self-check OK');
+}
+</script>
+</body>
+</html>
