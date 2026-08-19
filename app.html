@@ -417,31 +417,49 @@ function beginBreath(){
 // ---- 波音BGM: Web Audioでその場生成（音源ファイル不要・オフラインOK）----
 let surf=null;
 let bgmOn = localStorage.getItem('nagi-bgm')!=='off';
+// 波の音: iOSは消音スイッチでWeb Audioの音が消えるため、WAVを生成して<audio>要素で鳴らす
+let surfUrls=null;
+function makeWav(sec, fadeIn){
+  const sr=22050, n=Math.floor(sr*sec), xf=Math.floor(sr*0.5);   // 末尾0.5秒を頭にクロスフェード=継ぎ目なしループ
+  const raw=new Float32Array(n+xf);
+  let last=0, lp=0;
+  for(let i=0;i<raw.length;i++){
+    const w=Math.random()*2-1;
+    last=(last+0.02*w)/1.02;          // ブラウンノイズ
+    lp += (last*3.5 - lp)*0.08;       // ローパス（こもった波の音）
+    const t=i/sr;
+    const swell=0.16 + 0.09*Math.sin(2*Math.PI*0.07*t) + 0.06*Math.sin(2*Math.PI*0.045*t);
+    raw[i]=lp*swell;
+  }
+  const out=new Float32Array(n);
+  for(let i=0;i<n;i++) out[i]=raw[i];
+  for(let i=0;i<xf;i++){ const k=i/xf; out[i]=out[i]*k + raw[n+i]*(1-k); }
+  if(fadeIn) for(let i=0;i<n;i++){ const k=Math.min(1,i/(sr*fadeIn)); out[i]*=k*k; }  // 指数っぽい立ち上がり
+  const buf=new ArrayBuffer(44+n*2), v=new DataView(buf);
+  const str=(o,t)=>{for(let i=0;i<t.length;i++) v.setUint8(o+i,t.charCodeAt(i))};
+  str(0,'RIFF'); v.setUint32(4,36+n*2,true); str(8,'WAVEfmt '); v.setUint32(16,16,true);
+  v.setUint16(20,1,true); v.setUint16(22,1,true); v.setUint32(24,sr,true);
+  v.setUint32(28,sr*2,true); v.setUint16(32,2,true); v.setUint16(34,16,true);
+  str(36,'data'); v.setUint32(40,n*2,true);
+  for(let i=0;i<n;i++) v.setInt16(44+i*2, Math.max(-1,Math.min(1,out[i]))*32767, true);
+  return URL.createObjectURL(new Blob([buf],{type:'audio/wav'}));
+}
 function startSurf(){
   if(surf) return;
   try{
-    const ctx=new (window.AudioContext||window.webkitAudioContext)();
-    // ブラウンノイズ2秒ループ（波の素）
-    const len=2*ctx.sampleRate, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
-    let last=0;
-    for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=last*3.5; }
-    const src=ctx.createBufferSource(); src.buffer=buf; src.loop=true;
-    const lp=ctx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=650;
-    const gain=ctx.createGain(); gain.gain.value=0.001;
-    // うねり2本（周期違い）で「寄せて引く」を作る
-    const mkLfo=(freq,depth)=>{ const o=ctx.createOscillator(); o.frequency.value=freq;
-      const g=ctx.createGain(); g.gain.value=depth; o.connect(g); g.connect(gain.gain); o.start(); return o; };
-    mkLfo(0.07,0.09); mkLfo(0.045,0.06);
-    const base=ctx.createConstantSource(); base.offset.value=0.16; base.connect(gain.gain); base.start();
-    // 急に鳴るとびびるので無音から指数カーブでフェードイン（12秒は遅すぎ・6秒は直線で急すぎたの中間=指数7秒）
-    const master=ctx.createGain();
-    master.gain.setValueAtTime(0.001, ctx.currentTime);
-    master.gain.exponentialRampToValueAtTime(1, ctx.currentTime+7);
-    src.connect(lp); lp.connect(gain); gain.connect(master); master.connect(ctx.destination); src.start();
-    surf={ctx};
-  }catch(e){ surf=null; }
+    if(!surfUrls) surfUrls={intro:makeWav(9,7), loop:makeWav(12,0)};   // 9秒の頭出し（7秒フェードイン）→12秒ループ
+    const a=new Audio(surfUrls.intro);
+    a.playsInline=true; a.preload='auto';
+    a.addEventListener('ended',()=>{ if(!surf) return; a.src=surfUrls.loop; a.loop=true; a.play().catch(()=>{}); });
+    surf={a};
+    a.play().catch(err=>{ surf=null; bgmFailed(); });
+  }catch(e){ surf=null; bgmFailed(); }
 }
-function stopSurf(){ if(surf){ try{surf.ctx.close()}catch(e){} surf=null; } }
+function bgmFailed(){
+  const t=document.getElementById('wf-bgm-t');
+  if(t){ t.textContent='音が出ません'; setTimeout(renderBgmBtn,4000); }
+}
+function stopSurf(){ if(surf){ try{ surf.a.pause(); surf.a.src=''; }catch(e){} surf=null; } }
 function renderBgmBtn(){
   const b=document.getElementById('wf-bgm');
   document.getElementById('wf-bgm-ic').textContent = bgmOn ? '🔊' : '🔇';
