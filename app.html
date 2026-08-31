@@ -5,215 +5,256 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>ナギ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=M+PLUS+1p:wght@900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
-/* ========= 案① ライト・ソフト =========
-   線画アイコン（案③）に戻す時は、body冒頭の「線画アイコン版（切り替え用・案③のアイコン）」の
-   HTMLコメントを外し、JS側の ic() も同じ手順で差し替える。 */
+/* ========= Glow スタイル（glow.app の骨格に準拠） =========
+   骨格: ①数値ヒーロー（小ラベル→特大の数字） ②カードでなく罫線でセクションを割る
+         ③リスト行は「円アイコン＋主/副」←→「値/状態」の左右振り分け ④影ゼロ・面色と余白で分離
+   ラテン/数字は Manrope（Roobert は商用非公開のため最も近い幾何学グロテスクで代替）、日本語は Zen Kaku Gothic New。 */
 :root{
-  --bg:linear-gradient(180deg,#fdfaf3,#eaf1f8 62%,#e4eef6);
-  --card:#ffffff; --ink:#22364a; --sub:#7e8fa0;
-  --acc:#4a90b8; --accd:#2b5d7d; --acc-soft:#d6e8f3; --acc-tint:#e3eef5;
-  --line:#e7eef4; --hair:#eef3f7; --ok:#4caf7d;
-  --shadow:0 4px 14px rgba(90,120,150,.13);
-  --bar:linear-gradient(180deg,#5aa0c6,#2b5d7d);
-  --radius:16px; --gap:9px;
+  --bg:#ffffff;        /* アプリの地は白（glow.appのアプリ画面を実測: #ffffff） */
+  --card:#f4f5f6;      /* Porcelain: 白地に乗る面・円アイコン・チップ */
+  --ink:#131517;       /* 文字・罫線・アイコン。構造を担う中立色 */
+  --sub:#737577;       /* Stone: 本文グレー */
+  --acc:#cc62d5;       /* Voltage Magenta: 主要CTA専用・1画面に1つだけ */
+  --accd:#131517;      /* 見出しは黒。色は付けない */
+  --acc-soft:#eccff0; --acc-tint:#fbf3fc;
+  --line:#e4e5e6; --hair:#eeeff0;
+  --graphite:#333537;
+  --ember:#ec660d;     /* バッジの印。第二のブランド色にはしない */
+  --ok:#1a9c62;        /* 意味色: 事実の確証・達成（機能なので残す） */
+  --shadow:none;       /* Glowは意図的にフラット。影は足さない */
+  --bar:#131517;
+  --radius:24px;       /* カード */
+  --r-btn:19px;        /* Glowの署名的な半ピル */
+  --gap:12px;
+  --ease-out:cubic-bezier(.22,1,.36,1);
+  --spring:cubic-bezier(.34,1.56,.64,1);
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
 body{
-  font-family:'Zen Kaku Gothic New',sans-serif; background:#dfe7ee; color:var(--ink);
+  font-family:'Manrope','Zen Kaku Gothic New',sans-serif; background:#e9eaeb; color:var(--ink);
   display:flex; justify-content:center; align-items:flex-start;
   line-height:1.7; overflow-wrap:break-word; word-break:auto-phrase;
 }
 #phone{
   width:100%; max-width:430px; min-height:100vh; background:var(--bg);
   display:flex; flex-direction:column; position:relative;
-  box-shadow:0 0 40px rgba(43,61,77,.15);
 }
-main{flex:1; padding:20px 18px 96px; overflow-y:auto}
+main{flex:1; padding:8px 18px 96px; overflow-y:auto}
 .screen{display:none}
-.screen.active{display:block; animation:fadein .25s ease}
-@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.screen.active{display:block; animation:fadein .3s var(--ease-out)}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 .emo{line-height:1; font-style:normal}
-/* 線画アイコン用（切り替え用に残す） */
 .li{display:block; fill:none; stroke:currentColor; stroke-width:1.4; stroke-linecap:round; stroke-linejoin:round}
+.num{font-family:'Manrope',sans-serif; font-variant-numeric:tabular-nums; letter-spacing:-.04em}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* header */
-header{padding:18px 20px 4px; display:flex; align-items:baseline; gap:8px}
-header h1{font-size:22px; font-weight:900; letter-spacing:.06em; color:var(--accd)}
+/* header — Glowのアプリは大見出しを置かない。小さなワードマークだけ */
+header{padding:18px 20px 2px; display:flex; align-items:center; justify-content:space-between}
+header h1{font-size:19px; font-weight:800; letter-spacing:-.03em; color:var(--ink)}
 header .sub{font-size:11px; color:var(--sub); font-weight:500}
 
-/* home */
-.today-msg{
-  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-  padding:16px 18px; margin-bottom:var(--gap); font-size:14px;
-}
-.today-msg b{color:var(--accd)}
-.wave-btn{
-  width:100%; border:none; cursor:pointer; border-radius:20px;
-  background:linear-gradient(160deg,#5aa0c6,#2b5d7d); color:#fff;
-  padding:32px 20px 30px; text-align:center; font-family:inherit;
-  position:relative; overflow:hidden;
-  box-shadow:0 8px 18px rgba(43,93,125,.28); margin-bottom:var(--gap);
-  transition:transform .12s ease;
-}
-.wave-btn:active{transform:scale(.97)}
-.wave-btn .big{font-size:24px; font-weight:900; letter-spacing:.04em; position:relative; z-index:2;
-  display:flex; align-items:center; justify-content:center; gap:10px}
-.wave-btn .small{font-size:12px; opacity:.9; margin-top:6px; position:relative; z-index:2}
-.wave-btn svg{position:absolute; bottom:-6px; left:0; width:200%; height:60px; opacity:.3; z-index:1;
-  animation:drift 7s linear infinite}
-@keyframes drift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.quickrow{display:grid; grid-template-columns:1fr 1fr; gap:var(--gap)}
-.quick{
-  background:var(--card); border:none; cursor:pointer; border-radius:var(--radius);
-  padding:16px 12px; font-family:inherit; font-size:13px; font-weight:700; color:var(--ink);
-  display:flex; flex-direction:column; align-items:center; gap:8px; box-shadow:var(--shadow);
-}
-.quick .emo{font-size:24px}
+/* home — 数値ヒーロー（Glowの残高表示の骨格） */
+.hero{text-align:center; padding:14px 0 20px}
+.hero .lab{font-size:12px; font-weight:500; color:var(--sub)}
+.hero .n{display:block; font-family:'Manrope',sans-serif; font-variant-numeric:tabular-nums;
+  font-size:56px; font-weight:800; letter-spacing:-.045em; color:var(--ink); line-height:1.08; margin-top:2px}
+.hero .n .u{font-size:22px; font-weight:700; letter-spacing:-.01em; margin-left:3px}
+.today-msg{font-size:13px; color:var(--sub); line-height:1.8; margin-top:8px}
+.today-msg b{color:var(--ink); font-weight:700}
 
-/* wave flow */
+/* 主要CTA: この画面で唯一のマゼンタ */
+.wave-btn{
+  width:100%; border:none; cursor:pointer; border-radius:var(--r-btn);
+  background:var(--acc); color:#fff; padding:15px 20px 13px; text-align:center;
+  font-family:inherit; margin-bottom:20px;
+  transition:transform .12s var(--spring), background-color .12s ease;
+}
+.wave-btn:active{transform:scale(.985); background:#bb50c4}
+.wave-btn .big{font-size:16px; font-weight:700; letter-spacing:-.01em;
+  display:flex; align-items:center; justify-content:center; gap:9px}
+.wave-btn .small{font-size:12px; font-weight:500; opacity:.82; margin-top:2px}
+
+/* クイック — Glowの Buy/Send/Swap 行（円アイコン＋ラベル横並び・影なし） */
+.quickrow{display:flex; justify-content:center; gap:20px; padding-bottom:22px}
+.quick{
+  background:none; border:none; cursor:pointer; font-family:inherit;
+  display:flex; align-items:center; gap:8px; padding:0;
+  font-size:13px; font-weight:700; letter-spacing:-.01em; color:var(--ink);
+}
+.quick svg{
+  width:40px; height:40px; padding:11px; box-sizing:border-box;
+  border-radius:50%; background:var(--card); color:var(--ink); flex:none;
+  transition:transform .12s var(--spring);
+}
+.quick:active svg{transform:scale(.92)}
+
+/* wave flow — 海の中にいる状態を表す面。意味色なので深い青は残し、グラデだけ廃してベタに */
 #waveflow{
-  position:fixed; inset:0; background:linear-gradient(180deg,#1d3d52,#2b5d7d 60%,#3d7ea6);
+  position:fixed; inset:0; background:#1d3d52;
   color:#fff; display:none; flex-direction:column; align-items:center; justify-content:center;
   text-align:center; padding:32px; z-index:50; overflow:hidden;
 }
 #waveflow.active{display:flex}
-#waveflow>*{position:relative; z-index:2}
-/* 海面: 3層パララックス波（塗り） */
-#wf-waves{position:absolute; left:0; right:0; bottom:0; height:34vh; z-index:1; pointer-events:none;
-  transition:transform 4s ease-in-out}
-#wf-waves svg{position:absolute; bottom:0; left:0; width:200%; height:100%; preserveAspectRatio:none}
-#wf-waves .w1{opacity:.10; animation:wdrift 26s linear infinite}
-#wf-waves .w2{opacity:.14; animation:wdrift 17s linear infinite reverse; bottom:-4vh}
-#wf-waves .w3{opacity:.22; animation:wdrift 11s linear infinite; bottom:-9vh}
-@keyframes wdrift{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 #wf-bgm{
-  position:absolute; top:20px; right:18px; z-index:3;
-  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.4); color:#fff;
-  border-radius:99px; padding:9px 16px; font-family:inherit; font-size:12px; font-weight:700; cursor:pointer;
-  display:flex; align-items:center; gap:6px;
+  position:absolute; top:20px; right:18px;
+  background:rgba(255,255,255,.10); border:1px solid rgba(255,255,255,.34); color:#fff;
+  border-radius:var(--r-btn); padding:9px 15px; font-family:inherit; font-size:12px; font-weight:700;
+  letter-spacing:-.01em; cursor:pointer; display:flex; align-items:center; gap:6px;
+  transition:transform .12s var(--spring);
 }
-#wf-bgm.off{opacity:.55}
+#wf-bgm:active{transform:scale(.96)}
+#wf-bgm.off{opacity:.5}
 #wf-back{
-  position:absolute; top:20px; left:18px; z-index:3;
-  background:none; border:none; color:rgba(255,255,255,.75);
-  font-family:inherit; font-size:13px; font-weight:700; cursor:pointer; padding:9px 10px;
+  position:absolute; top:20px; left:18px;
+  background:none; border:none; color:rgba(255,255,255,.7);
+  font-family:inherit; font-size:13px; font-weight:600; cursor:pointer; padding:9px 10px;
 }
-/* 外周リング固定・内側の円だけ満ち欠け＝文字と重ならない */
+/* 円だけが満ち欠けし、数字は常に同じ大きさ（文字を変形させない） */
 #breath-circle{
-  width:190px; height:190px; border-radius:50%;
-  border:2px solid rgba(255,255,255,.5);
-  display:flex; align-items:center; justify-content:center;
-  margin-bottom:26px;
+  position:relative; width:190px; height:190px; border-radius:50%;
+  border:1.5px solid rgba(255,255,255,.34);
+  display:grid; place-items:center; margin-bottom:24px;
 }
 #breath-disc{
-  width:100%; height:100%; border-radius:50%;
-  background:rgba(255,255,255,.16);
-  display:flex; align-items:center; justify-content:center;
-  font-family:'M PLUS 1p',sans-serif; font-size:60px; font-weight:900; letter-spacing:-.02em;
-  color:#fff; font-variant-numeric:tabular-nums; transform:scale(.5);
+  grid-area:1/1; width:100%; height:100%; border-radius:50%;
+  background:rgba(255,255,255,.14); transform:scale(.5);
 }
-#breath-disc.waiting{font-size:26px; cursor:pointer}
-/* 呼吸の言葉は円の下（円の中は数字だけ） */
-#wf-word{font-family:'M PLUS 1p',sans-serif; font-size:24px; font-weight:900; margin-top:2px; min-height:34px}
-#waveflow .timer{font-size:14px; opacity:.75; margin-top:14px}
-#waveflow .skip{margin-top:30px; background:none; border:1px solid rgba(255,255,255,.4); color:#fff;
-  border-radius:99px; padding:10px 26px; font-family:inherit; font-size:13px; font-weight:700; cursor:pointer;
-  display:flex; align-items:center; gap:7px}
+#breath-disc.waiting{cursor:pointer}
+#wf-count{
+  grid-area:1/1; z-index:2; pointer-events:none;
+  font-family:'Manrope',sans-serif; font-variant-numeric:tabular-nums;
+  font-size:58px; font-weight:800; letter-spacing:-.045em; color:#fff; line-height:1;
+}
+#breath-disc.waiting ~ #wf-count{font-size:20px; font-weight:700; letter-spacing:-.01em}
+#wf-word{font-size:22px; font-weight:700; letter-spacing:-.02em; margin-top:2px; min-height:32px}
+#waveflow .timer{font-size:13px; opacity:.7; margin-top:12px}
+#waveflow .skip{
+  margin-top:28px; background:none; border:1px solid rgba(255,255,255,.4); color:#fff;
+  border-radius:var(--r-btn); padding:11px 24px; font-family:inherit; font-size:13px; font-weight:700;
+  letter-spacing:-.01em; cursor:pointer; display:flex; align-items:center; gap:7px;
+  transition:transform .12s var(--spring);
+}
+#waveflow .skip:active{transform:scale(.97)}
 #wavedone{display:none; position:fixed; inset:0; background:var(--bg); z-index:51;
   flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:32px}
 #wavedone.active{display:flex}
-#wavedone .nagi{font-size:56px; margin-bottom:10px}
-#wavedone h2{font-size:22px; font-weight:900; color:var(--accd); margin-bottom:12px}
-#wavedone p{font-size:14px; color:var(--sub); margin-bottom:26px}
-#wavedone p b{color:var(--ink)}
-.btn-primary{
-  background:var(--acc); color:#fff; border:none; border-radius:99px;
-  padding:14px 40px; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer;
-  box-shadow:0 5px 13px rgba(74,144,184,.3);
-}
+#wavedone .nagi{color:var(--ink); margin-bottom:14px}
+#wavedone h2{font-size:24px; font-weight:800; letter-spacing:-.03em; color:var(--ink); margin-bottom:10px}
+#wavedone p{font-size:13px; color:var(--sub); margin-bottom:26px; line-height:1.8}
+#wavedone p b{color:var(--ink); font-weight:700}
 
-/* mirror */
-.section-title{font-size:16px; font-weight:900; margin:4px 0 4px; color:var(--accd);
-  display:flex; align-items:center; gap:7px}
-.section-lead{font-size:12px; color:var(--sub); margin-bottom:14px}
-.chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px}
+/* ボタン: filledマゼンタは1画面に1つ。並べる時の相方はインクのゴースト */
+.btn-primary{
+  background:var(--acc); color:#fff; border:none; border-radius:var(--r-btn);
+  padding:14px 32px; font-family:inherit; font-size:15px; font-weight:700; letter-spacing:-.01em;
+  cursor:pointer; transition:transform .12s var(--spring), background-color .12s ease;
+}
+.btn-primary:active{transform:scale(.985); background:#bb50c4}
+.btn-ink{background:var(--ink)}
+.btn-ink:active{background:var(--graphite,#333537)}
+.btn-ghost{
+  background:none; color:var(--ink); border:1.5px solid var(--ink); border-radius:var(--r-btn);
+  padding:12.5px 30px; font-family:inherit; font-size:15px; font-weight:700; letter-spacing:-.01em;
+  cursor:pointer; transition:transform .12s var(--spring), background-color .12s ease;
+}
+.btn-ghost:active{transform:scale(.985); background:rgba(19,21,23,.06)}
+:focus-visible{outline:2px solid var(--acc); outline-offset:2px}
+
+/* セクション — Glowの「Coins ⟷ All ›」の行 */
+.section-title{font-size:17px; font-weight:800; letter-spacing:-.025em; margin:6px 0 2px; color:var(--ink);
+  display:flex; align-items:center; gap:8px}
+.section-title .more{margin-left:auto; font-size:13px; font-weight:600; letter-spacing:-.01em; color:var(--sub)}
+.section-lead{font-size:12px; color:var(--sub); margin-bottom:16px; line-height:1.7}
+.chips{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:18px}
 .chip{
   background:var(--card); border:1.5px solid transparent; border-radius:99px;
-  padding:9px 14px; font-family:inherit; font-size:13px; font-weight:700; color:var(--ink);
-  cursor:pointer; box-shadow:var(--shadow); transition:all .12s;
+  padding:9px 15px; font-family:inherit; font-size:13px; font-weight:600; letter-spacing:-.01em;
+  color:var(--ink); cursor:pointer;
+  transition:transform .12s var(--spring), background-color .12s ease, color .12s ease;
 }
-.chip.on{border-color:var(--acc); background:var(--acc-tint); color:var(--accd)}
+.chip:active{transform:scale(.96)}
+.chip.on{background:var(--ink); color:#fff; border-color:var(--ink)}
 #mirror-result{
-  display:none; background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-  padding:18px; margin-top:8px;
+  display:none; background:var(--card); border-radius:var(--radius);
+  padding:20px; margin-top:10px;
 }
-#mirror-result.show{display:block; animation:fadein .3s ease}
+#mirror-result.show{display:block; animation:fadein .3s var(--ease-out)}
 #mirror-result .who{font-size:11px; color:var(--sub); margin-bottom:8px}
-#mirror-result .msg{font-size:15px; font-weight:700; line-height:1.9}
-#mirror-result .msg em{font-style:normal; color:var(--acc); border-bottom:1.5px solid var(--acc-soft)}
+#mirror-result .msg{font-size:15px; font-weight:600; line-height:1.9; letter-spacing:-.01em}
+#mirror-result .msg em{font-style:normal; font-weight:800; border-bottom:2px solid var(--acc-soft)}
 
-/* facts */
+/* 事実 — Glowのコインリスト行（カードをやめ、罫線で割る。左右振り分け） */
 .fact{
-  background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow);
-  padding:14px 16px; margin-bottom:var(--gap);
+  background:none; border-radius:0; box-shadow:none;
+  padding:11px 0; margin-bottom:0;
   display:flex; align-items:center; gap:13px;
 }
-.fact .icon{font-size:22px; flex:none; line-height:1}
-.fact .t{font-size:14px; font-weight:700; flex:1}
-.fact .stamp{
-  font-size:10px; font-weight:900; color:var(--ok); border:1.5px solid var(--ok);
-  border-radius:6px; padding:2px 7px; white-space:nowrap; transform:rotate(-6deg);
+/* Glowは行間に線を引かず、セクションの外側にだけ1本引く */
+#facts-auto:not(:empty), #facts:not(:empty){
+  border-top:1px solid var(--hair); border-bottom:1px solid var(--hair); margin-top:-1px;
 }
-.fact.auto{background:var(--acc-tint)}
-.txt-in{border:1px solid #dfe6ec; border-radius:12px; padding:11px 12px;
-  font-family:inherit; font-size:13px; color:var(--ink); background:#fff}
+.fact .icon{
+  width:40px; height:40px; border-radius:50%; background:var(--ink); color:#fff;
+  display:grid; place-items:center; flex:none; line-height:1;
+}
+.fact .icon .li{stroke-width:1.6; width:21px; height:21px}
+.fact .t{font-size:15px; font-weight:700; letter-spacing:-.01em; flex:1; min-width:0}
+.fact .stamp{
+  font-size:12px; font-weight:700; letter-spacing:-.01em; color:var(--ok);
+  border:none; border-radius:0; padding:0; white-space:nowrap; transform:none;
+}
+.fact.auto{background:none}
+.fact.auto .icon{background:var(--ember)}
+.fact.auto .stamp{color:var(--ember)}
+.txt-in{border:1px solid var(--line); border-radius:var(--r-btn); padding:12px 13px;
+  font-family:inherit; font-size:13px; color:var(--ink); background:var(--card)}
+.txt-in::placeholder{color:#a9abad}
 
 /* log */
-#chart{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:16px; margin-bottom:12px}
-.stat-row{display:grid; grid-template-columns:1fr 1fr; gap:var(--gap); margin-bottom:var(--gap)}
-.stat{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:14px; text-align:center}
-.stat .num{font-family:'M PLUS 1p',sans-serif; font-size:28px; font-weight:900; color:var(--accd); line-height:1.3}
-.stat .lab{font-size:11px; color:var(--sub)}
+#chart{background:none; border-radius:0; box-shadow:none; padding:18px 0; border-bottom:1px solid var(--hair)}
+.stat-row{display:flex; gap:0; margin:2px 0 20px; padding-bottom:20px; border-bottom:1px solid var(--line)}
+.stat{flex:1; background:none; border-radius:0; box-shadow:none; padding:0; text-align:center}
+.stat+.stat{border-left:1px solid var(--line)}
+.stat .num{font-family:'Manrope',sans-serif; font-variant-numeric:tabular-nums;
+  font-size:38px; font-weight:800; letter-spacing:-.045em; color:var(--ink); line-height:1.15}
+.stat .lab{font-size:11px; color:var(--sub); margin-top:2px}
 .survive{
-  background:linear-gradient(160deg,#5aa0c6,#2b5d7d); color:#fff; border-radius:var(--radius);
-  padding:18px; font-size:14px; font-weight:700; line-height:1.9;
+  background:none; color:var(--sub); border-radius:0;
+  padding:22px 0 4px; font-size:12px; font-weight:500; line-height:1.8; text-align:center;
 }
-.survive .pct{font-family:'M PLUS 1p',sans-serif; font-size:32px; font-weight:900}
+.survive .pct{display:block; font-family:'Manrope',sans-serif; font-variant-numeric:tabular-nums;
+  font-size:46px; font-weight:800; letter-spacing:-.045em; color:var(--ink); line-height:1.15; margin:2px 0}
 
-/* nav */
+/* nav — アイコンのみ。アクティブが黒、それ以外はグレー */
 nav{
-  position:absolute; bottom:0; left:0; right:0; background:var(--card);
-  display:flex; border-top:1px solid var(--line); padding:8px 6px calc(10px + env(safe-area-inset-bottom));
+  position:absolute; bottom:0; left:0; right:0; background:var(--bg);
+  display:flex; border-top:1px solid var(--line); padding:9px 6px calc(11px + env(safe-area-inset-bottom));
 }
 nav button{
   flex:1; background:none; border:none; font-family:inherit; cursor:pointer;
-  font-size:10px; font-weight:700; color:var(--sub); padding:6px 0;
+  font-size:10px; font-weight:600; letter-spacing:-.01em; color:var(--sub); padding:5px 0;
   display:flex; flex-direction:column; align-items:center; gap:3px;
 }
-nav button .emo{font-size:20px; filter:grayscale(1); opacity:.55}
-nav button .li{opacity:.45}
-nav button.on{color:var(--accd)}
-nav button.on .emo{filter:none; opacity:1}
+
+nav button .li{width:22px; height:22px; opacity:.32; transition:opacity .12s ease}
+nav button.on{color:var(--ink); font-weight:700}
+
 nav button.on .li{opacity:1}
 
-/* help footer */
+/* help footer — Signal Red は支えの淡いwashとして。ステータス色には使わない */
 .helpline{
-  margin-top:24px; padding:14px 16px; border-radius:var(--radius);
-  background:#fdf4f2; font-size:11px; color:#a0625c; line-height:1.9;
+  margin-top:26px; padding:16px 18px; border-radius:var(--radius);
+  background:#fdf0f1; font-size:11px; color:#8d4a50; line-height:1.9;
 }
-.helpline b{display:block; font-size:12px}
-.disclaimer{font-size:10px; color:#9aa2a9; margin-top:10px; text-align:center; line-height:1.7}
+.helpline b{display:block; font-size:12px; color:#e83b47; margin-bottom:1px}
+.disclaimer{font-size:10px; color:#a9abad; margin-top:12px; text-align:center; line-height:1.7}
 </style>
 </head>
 <body>
-<!-- 線画アイコン版（切り替え用・案③のアイコン）
-     戻し方: ①このコメント（この行と最終行の閉じ）を外してスプライトを復活
-             ②JS側の ic()（下の「線画アイコン版」コメント）を差し替え
-             ③本文中の <span class="emo">絵文字</span> を <svg class="li" width="N" height="N"><use href="#i-XXX"/></svg> に戻す
-                （元の記述は git show 5a9e539:app.html で確認できる）
+<!-- アイコン: Glowのリストアイコン（ベタ1色の円＋白いシンボル）に合わせた線画スプライト -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <symbol id="i-wave" viewBox="0 0 20 20"><path d="M2 13c2.7-4 5.3 4 8 0s5.3 4 8 0"/><path d="M2 8c2.7-4 5.3 4 8 0s5.3 4 8 0"/></symbol>
   <symbol id="i-mirror" viewBox="0 0 20 20"><ellipse cx="10" cy="8" rx="5.5" ry="6.5"/><path d="M10 14.5V18"/><path d="M7.5 18h5"/></symbol>
@@ -234,22 +275,24 @@ nav button.on .li{opacity:1}
   <symbol id="i-share" viewBox="0 0 20 20"><path d="M10 13.5V3.5"/><path d="M6.5 7L10 3.5 13.5 7"/><path d="M4.5 12v4.5h11V12"/></symbol>
   <symbol id="i-note" viewBox="0 0 20 20"><rect x="3.5" y="4" width="13" height="12" rx="1.2"/><path d="M6.5 8h7"/><path d="M6.5 11.5h4.5"/></symbol>
 </defs></svg>
--->
 <div id="phone">
   <header><h1>ナギ</h1></header>
   <main>
 
     <!-- HOME -->
     <section class="screen active" id="scr-home">
-      <div class="today-msg" id="today-msg"></div>
+      <div class="hero">
+        <div class="lab">乗り越えた波</div>
+        <span class="n" id="hero-num">0<span class="u">回</span></span>
+        <div class="today-msg" id="today-msg"></div>
+      </div>
       <button class="wave-btn" onclick="startWave()">
-        <div class="big"><span class="emo">🌊</span>波が来た</div>
+        <div class="big"><svg class="li" width="20" height="20"><use href="#i-wave"/></svg>波が来た</div>
         <div class="small">深呼吸する</div>
-        <svg viewBox="0 0 1200 60" preserveAspectRatio="none"><path d="M0,30 C150,60 350,0 600,30 C850,60 1050,0 1200,30 L1200,60 L0,60 Z" fill="#fff"/></svg>
       </button>
       <div class="quickrow">
-        <button class="quick" onclick="go('mirror')"><span class="emo">🪞</span>今日のできてるよ</button>
-        <button class="quick" onclick="go('facts')"><span class="emo">📌</span>事実の鏡</button>
+        <button class="quick" onclick="go('mirror')"><svg class="li" width="18" height="18"><use href="#i-mirror"/></svg>今日のできてるよ</button>
+        <button class="quick" onclick="go('facts')"><svg class="li" width="18" height="18"><use href="#i-pin"/></svg>事実の鏡</button>
       </div>
       <div class="helpline">
         <b>つらいときの相談先</b>
@@ -262,7 +305,7 @@ nav button.on .li{opacity:1}
 
     <!-- MIRROR -->
     <section class="screen" id="scr-mirror">
-      <div class="section-title"><span class="emo">🪞</span>今日のできてるよ</div>
+      <div class="section-title">今日のできてるよ<span class="more" id="more-今日"></span></div>
       <div class="section-lead">今日あったことをタップする。</div>
       <div class="chips" id="chips"></div>
       <button class="btn-primary" style="width:100%" onclick="mirror()">ミラーに映す</button>
@@ -275,7 +318,7 @@ nav button.on .li{opacity:1}
 
     <!-- FACTS -->
     <section class="screen" id="scr-facts">
-      <div class="section-title"><span class="emo">📌</span>事実の鏡</div>
+      <div class="section-title">事実の鏡<span class="more" id="more-事実"></span></div>
       <div class="section-lead">事実だけを置く場所。<br>記録から自動で増える。</div>
       <div id="facts-auto"></div>
       <div id="facts"></div>
@@ -287,7 +330,7 @@ nav button.on .li{opacity:1}
 
     <!-- LOG -->
     <section class="screen" id="scr-log">
-      <div class="section-title"><span class="emo">📈</span>波ログ</div>
+      <div class="section-title">波ログ<span class="more" id="more-波ロ"></span></div>
       <div class="section-lead">記録した波の一覧。</div>
       <div class="stat-row">
         <div class="stat"><div class="num" id="st-count">0</div><div class="lab">乗り越えた波</div></div>
@@ -303,7 +346,7 @@ nav button.on .li{opacity:1}
 
     <!-- FEEDBACK -->
     <section class="screen" id="scr-fb">
-      <div class="section-title"><span class="emo">✍️</span>感想（ヨシ君用）</div>
+      <div class="section-title">感想（ヨシ君用）<span class="more" id="more-感想"></span></div>
       <div class="section-lead">思ったことを書く。<br>書けた分だけで提出できる。</div>
       <div id="fb-list"></div>
       <input id="fb-name" class="txt-in" placeholder="なまえ（例: ヨシ）" style="width:100%;font-size:14px;padding:12px;margin:4px 0 12px">
@@ -312,35 +355,30 @@ nav button.on .li{opacity:1}
         <div style="font-size:12px;color:var(--sub);margin-bottom:8px">提出テキストができました。<br>コピーしてユウキに送るだけです。</div>
         <textarea id="fb-out" readonly style="width:100%;min-height:170px;border:1px solid #dfe6ec;border-radius:12px;padding:10px;font-family:inherit;font-size:11px;line-height:1.7;background:#fafbfc;resize:none;color:var(--ink)"></textarea>
         <div style="display:flex;gap:8px;margin-top:10px">
-          <button class="btn-primary" style="flex:1;padding:12px 8px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px" id="fb-copy" onclick="fbCopy(this)"><span class="emo">📋</span><span>コピー</span></button>
-          <button class="btn-primary" style="flex:1;padding:12px 8px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="fbShare()"><span class="emo">📤</span><span>共有</span></button>
+          <button class="btn-primary btn-ink" style="flex:1;padding:12px 8px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px" id="fb-copy" onclick="fbCopy(this)"><svg class="li" width="16" height="16"><use href="#i-copy"/></svg><span>コピー</span></button>
+          <button class="btn-ghost" style="flex:1;padding:11px 8px;font-size:13px;display:flex;align-items:center;justify-content:center;gap:6px" onclick="fbShare()"><svg class="li" width="16" height="16"><use href="#i-share"/></svg><span>共有</span></button>
         </div>
       </div>
     </section>
 
   </main>
   <nav>
-    <button class="on" data-s="home" onclick="go('home')"><span class="emo">🌊</span>ホーム</button>
-    <button data-s="mirror" onclick="go('mirror')"><span class="emo">🪞</span>ミラー</button>
-    <button data-s="facts" onclick="go('facts')"><span class="emo">📌</span>事実</button>
-    <button data-s="log" onclick="go('log')"><span class="emo">📈</span>波ログ</button>
-    <button data-s="fb" onclick="go('fb')"><span class="emo">✍️</span>感想</button>
+    <button class="on" data-s="home" onclick="go('home')"><svg class="li" width="20" height="20"><use href="#i-wave"/></svg>ホーム</button>
+    <button data-s="mirror" onclick="go('mirror')"><svg class="li" width="18" height="18"><use href="#i-mirror"/></svg>ミラー</button>
+    <button data-s="facts" onclick="go('facts')"><svg class="li" width="18" height="18"><use href="#i-pin"/></svg>事実</button>
+    <button data-s="log" onclick="go('log')"><svg class="li" width="18" height="18"><use href="#i-chart"/></svg>波ログ</button>
+    <button data-s="fb" onclick="go('fb')"><svg class="li" width="18" height="18"><use href="#i-pen"/></svg>感想</button>
   </nav>
 </div>
 
 <!-- WAVE FLOW -->
 <div id="waveflow">
   <button id="wf-back" onclick="exitWave()">← 戻る</button>
-  <button id="wf-bgm" onclick="toggleBgm()"><span class="emo" id="wf-bgm-ic">🔊</span><span id="wf-bgm-t">波の音 ON</span></button>
-  <div id="wf-waves">
-    <svg class="w1" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,120 C200,60 400,180 600,120 C800,60 1000,180 1200,120 C1400,60 1600,180 1800,120 C2000,60 2200,180 2400,120 L2400,240 L0,240 Z" fill="#fff"/></svg>
-    <svg class="w2" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,130 C150,80 450,170 600,130 C750,90 1050,170 1200,130 C1350,90 1650,170 1800,130 C1950,90 2250,170 2400,130 L2400,240 L0,240 Z" fill="#fff"/></svg>
-    <svg class="w3" viewBox="0 0 2400 240" preserveAspectRatio="none"><path d="M0,140 C300,100 300,180 600,140 C900,100 900,180 1200,140 C1500,100 1500,180 1800,140 C2100,100 2100,180 2400,140 L2400,240 L0,240 Z" fill="#fff"/></svg>
-  </div>
-  <div id="breath-circle"><div id="breath-disc" onclick="beginBreath()"><span id="wf-count"></span></div></div>
+  <button id="wf-bgm" onclick="toggleBgm()"><span id="wf-bgm-ic"><svg class="li" width="15" height="15"><use href="#i-sound"/></svg></span><span id="wf-bgm-t">波の音 ON</span></button>
+  <div id="breath-circle"><div id="breath-disc" onclick="beginBreath()"></div><span id="wf-count"></span></div>
   <div id="wf-word"></div>
   <div class="timer" id="wf-timer"></div>
-  <button class="skip" onclick="endWave(true)"><span class="emo">🏖️</span>もう大丈夫</button>
+  <button class="skip" onclick="endWave(true)"><svg class="li" width="44" height="44"><use href="#i-beach"/></svg>もう大丈夫</button>
 </div>
 <div id="wavedone">
   <div class="nagi">🏖️</div>
@@ -360,10 +398,7 @@ let data = store.load();
 const todayKey = () => new Date().toISOString().slice(0,10);
 const EMO = {wave:'🌊',mirror:'🪞',pin:'📌',chart:'📈',pen:'✍️',beach:'🏖️',sound:'🔊',mute:'🔇',
   book:'📚',work:'💼',star:'⭐',house:'🏠',money:'📊',fire:'🔥',check:'✅',copy:'📋',share:'📤',note:'📝'};
-const ic = (n,sz) => `<span class="emo" style="font-size:${sz}px">${EMO[n]||''}</span>`;
-/* 線画アイコン版（切り替え用・案③のアイコン）: 上の ic を消してこの行を有効にすると線画に戻る
 const ic = (n,sz) => `<svg class="li" width="${sz}" height="${sz}"><use href="#i-${n}"/></svg>`;
-*/
 
 // ---- nav ----
 function go(s){
@@ -378,11 +413,10 @@ function renderToday(){
   const n = data.waves.length;
   const el = document.getElementById('today-msg');
   const streak = calcStreak();
-  if(n===0 && streak===0){
-    el.innerHTML = '波が来たら下のボタンを押す。<br>それ以外の時間は使わなくて大丈夫。';
-  } else {
-    el.innerHTML = `乗り越えた波 <b>${n}回</b>。`;
-  }
+  document.getElementById('hero-num').innerHTML = `${n}<span class="u">回</span>`;
+  el.innerHTML = (n===0 && streak===0)
+    ? '波が来たら下のボタンを押す。<br>それ以外の時間は使わなくて大丈夫。'
+    : `連続チェックイン <b>${streak}日</b>。`;
 }
 
 // ---- wave flow: 4-7-8呼吸 ×3 + urge surfing copy ----
@@ -462,7 +496,7 @@ function bgmFailed(){
 function stopSurf(){ if(surf){ try{ surf.a.pause(); surf.a.src=''; }catch(e){} surf=null; } }
 function renderBgmBtn(){
   const b=document.getElementById('wf-bgm');
-  document.getElementById('wf-bgm-ic').textContent = bgmOn ? '🔊' : '🔇';
+  document.getElementById('wf-bgm-ic').innerHTML = ic(bgmOn?'sound':'mute',15);
   document.getElementById('wf-bgm-t').textContent = bgmOn ? '波の音 ON' : '波の音 OFF';
   b.classList.toggle('off', !bgmOn);
 }
@@ -478,8 +512,6 @@ function runBreath(cycle, phaseIdx){
   const disc = document.getElementById('breath-disc');
   disc.style.transition = `transform ${p.sec}s ease-in-out`;
   disc.style.transform = (p.cls==='out') ? 'scale(.5)' : 'scale(1)';   // 吸う=満ちる・とめる=満月・吐く=欠ける
-  // 呼吸に合わせて海面が満ち引きする（吸う=満ちる・吐く=引く）
-  document.getElementById('wf-waves').style.transform = (p.cls==='out') ? 'translateY(3vh)' : 'translateY(-3vh)';
   let left = p.sec;
   const count = document.getElementById('wf-count');
   document.getElementById('wf-word').textContent = p.label;
@@ -593,6 +625,7 @@ const FACTS = [
 function renderFacts(){
   const custom = (data.customFacts||[]).map(t=>({icon:'pen', t}));
   const wrap = document.getElementById('facts');
+  document.getElementById('more-事実').textContent = `${FACTS.concat(custom).length}件`;
   wrap.innerHTML = FACTS.concat(custom).map(f=>
     `<div class="fact"><div class="icon">${ic(f.icon,20)}</div><div class="t">${f.t}</div><div class="stamp">これは事実</div></div>`
   ).join('');
@@ -624,6 +657,7 @@ function addFact(){
 // ---- log ----
 function renderLog(){
   const n = data.waves.length;
+  document.getElementById('more-波ロ').textContent = n>0 ? `${n}回` : '';
   document.getElementById('st-count').textContent = n;
   document.getElementById('st-streak').textContent = calcStreak();
   document.getElementById('st-pct').textContent = n>0 ? '100%' : '—';
@@ -634,7 +668,7 @@ function renderLog(){
   const bars = waves.map(w=>{
     const h = Math.max(8, Math.round(w.sec/max*80));
     return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
-      <div style="width:70%;height:${h}px;background:var(--bar);border-radius:4px 4px 0 0"></div>
+      <div style="width:70%;max-width:24px;height:${h}px;background:var(--bar);border-radius:3px 3px 0 0"></div>
       <div style="font-size:9px;color:var(--sub)">${w.sec}s</div></div>`;
   }).join('');
   document.getElementById('chart').innerHTML = n===0
@@ -707,7 +741,10 @@ if(location.search.includes('test=1')){
   console.assert(data.waves.length===1, 'wave recorded');
   data.days[todayKey()]=['work'];
   console.assert(calcStreak()===1, 'streak counts today');
-  console.assert(getComputedStyle(document.querySelector('.today-msg')).boxShadow.includes('rgba(90, 120, 150'), 'soft shadow applied');
+  console.assert(getComputedStyle(document.querySelector('#chart')).boxShadow==='none', 'flat: no card shadow');
+  console.assert(getComputedStyle(document.querySelector('.btn-primary')).borderRadius==='19px', 'buttons use the 19px half-pill');
+  console.assert(document.querySelectorAll('.screen.active .btn-primary:not(.btn-ink)').length<=1, 'at most one filled magenta per screen');
+  console.assert(!/scaleX|font-stretch/.test(document.head.innerHTML), 'no horizontal text distortion');
   console.assert(document.documentElement.scrollWidth<=window.innerWidth, 'no h-scroll');
   console.log('nagi self-check OK');
 }
